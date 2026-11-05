@@ -1,6 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import { analyze, render, registerOf, stripCode, concreteness, scanStructures, cluster } from '../lib/analyze.js';
+
+const here = dirname(fileURLToPath(import.meta.url));
 
 test('典型八股判成 heavy', () => {
   const r = analyze(
@@ -89,4 +94,59 @@ test('render 输出包含三项要你自己答', () => {
 test('同一个输入跑两次结果一致', () => {
   const s = '首先这样，其次那样。总的来说，不是甲而是乙。';
   assert.deepEqual(analyze(s).scores, analyze(s).scores);
+});
+
+// ── issue #1 的回归用例 ────────────────────────────────────
+
+test('#1.1 英文普通单词不再算具体物', () => {
+  const r = analyze('The build pipeline uses a cache layer and the worker reads a manifest before it starts.');
+  assert.equal(r.hits.concrete.filter((h) => h.kind === 'ident' && /^[a-z]+$/.test(h.text)).length, 0);
+  assert.ok(r.scores.concretePer100 < 2, '纯英文散文该接近 0，实际 ' + r.scores.concretePer100);
+});
+
+test('#1.1 真正的标识符仍然计入', () => {
+  const r = analyze('把它放到 /usr/local/bin/node，然后设 EADDRINUSE 那个变量，路径是 C:/Users/x/y.js。');
+  const ids = r.hits.concrete.filter((h) => h.kind === 'ident').map((h) => h.text);
+  assert.ok(ids.some((t) => t.includes('/usr/local/bin/node')));
+  assert.ok(ids.some((t) => t.includes('EADDRINUSE')));
+});
+
+test('#1.2 experience 和 sense 的权重高于 number 和 ident', () => {
+  const a = concreteness('我昨天试了一下，手都酸了。');
+  const b = concreteness('版本 1.2.3，路径 /a/b/c，端口 8080。');
+  assert.ok(a.weighted > 0);
+  assert.ok(b.weighted > 0);
+  // a 是两条经历类，b 是两条数字/路径类，按权重 a 应该更高
+  assert.ok(a.weighted >= b.weighted, `experience 权重不足: a=${a.weighted} b=${b.weighted}`);
+});
+
+test('#1.4 具体物充足时往回减一格', () => {
+  const rich = analyze(
+    '昨晚十一点半我第三次跑那个脚本，又卡在 8443 端口。日志里只有 EADDRINUSE。' +
+    '我盯着看了半天才反应过来，后来把之前那个进程 kill 掉就好了，大概是我自己忘了关。'
+  );
+  const empty = analyze(
+    '这个方案具有重要意义，是关键的转折点，体现了深刻的洞察，值得每个人认真思考和学习。'
+  );
+  assert.ok(rich.scores.replaceable < empty.scores.replaceable,
+    `具体的那段不该比空话更可疑: rich=${rich.scores.replaceable} empty=${empty.scores.replaceable}`);
+});
+
+test('#1.8 六十个字以下不给判档', () => {
+  const r = analyze('这个挺好。');
+  assert.equal(r.band, 'too-short');
+  assert.ok(r.bandNote.includes('六十字'), 'bandNote: ' + r.bandNote);
+});
+
+test('#1.8 六十字以上照常判档', () => {
+  const r = analyze(
+    '本次修改已完成。首先调整了章节结构，其次新增了规则条款，最后优化了可读性。' +
+    '综上所述，这次改动具有重要意义，希望对你有帮助。'
+  );
+  assert.notEqual(r.band, 'too-short');
+});
+
+test('#1.6b 没有死代码留下的未使用变量', () => {
+  const src = readFileSync(join(here, '..', 'lib', 'analyze.js'), 'utf8');
+  assert.ok(!src.includes('const allowed ='), 'allowed 应该已经删掉');
 });
