@@ -1,5 +1,11 @@
 # 插件自己写出来的配置，不归仓库管
 config.json
+
+# 打包产物
 *.tgz
+
+# 依赖
 node_modules/
+package-lock.json
+
 .DS_Store
