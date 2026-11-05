@@ -65,6 +65,16 @@ bagu_check({ text: "……" })   // 指标 + 判档 + 问句
 bagu_ask({ text: "……" })     // 只要问句
 ```
 
+外加一页设置：**设置 → 八股检测**。
+
+- **总开关**：关掉 = 那一节从系统提示里撤掉（立刻生效，不用重启）
+- **系统提示那一节开关**：关掉只留工具，不往提示里塞话 —— 想手动查、不想被改说话习惯的人用这个
+- **三个阈值**：留白词下限、结构腔报警倍数、具体物下限，都能调
+- **试一下**：粘一段话，当场看结果，不发送、不落盘
+
+配置存在插件目录的 `config.json`（已加进 `.gitignore`），宿主开 `/api/bagu`，
+提供 `status` / `config` / `preview` 三个接口。
+
 ## 装
 
 ```sh
@@ -72,8 +82,8 @@ git clone https://github.com/hongdougao111/dsh-bagu.git
 dsh plugin --profile web add link:/path/to/dsh-bagu
 ```
 
-或者直接用 release 里的 `dsh-bagu-0.1.0.tgz`。装完重启一次 dsh
-（宿主半侧和系统提示那一节都是启动时装配的）。
+或者直接用 release 里的 `dsh-bagu-0.2.0.tgz`。装完重启一次 dsh
+（宿主半侧、设置页和系统提示那一节都是启动时装配的）。
 
 手动改 profile 的 `cordis.patch.yml` 也行：
 
@@ -85,12 +95,15 @@ dsh plugin --profile web add link:/path/to/dsh-bagu
         enabled: true
         prompt: true
         order: 921
+        hedgeFloor: 0.5
+        structureTimes: 3
+        concreteFloor: 0.6
 ```
 
 ## 测试
 
 ```sh
-npm test    # 13 个
+npm test    # 30 个
 ```
 
 ## 边界
@@ -98,6 +111,7 @@ npm test    # 13 个
 - 中文为主，英文没专门校过
 - 基线取自中文评论语料，写长文和文档时会偏严 —— 那类文体本来就该有结构
 - 不给总分。分数会让人只盯数字，不看句子
+- 设置页在 headless 环境里没有，插件照样跑
 
 ## 许可
 

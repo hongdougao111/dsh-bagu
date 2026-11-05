@@ -1,0 +1,5 @@
+# 插件自己写出来的配置，不归仓库管
+config.json
+*.tgz
+node_modules/
+.DS_Store
