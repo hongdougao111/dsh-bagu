@@ -3,3 +3,7 @@ config.json
 *.tgz
 node_modules/
 .DS_Store
+
+# npm 装测试依赖带出来的，不进仓库
+package-lock.json
+node_modules/

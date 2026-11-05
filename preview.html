@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>dsh-bagu 设置页 · 视觉预览</title>
+<style>
+  :root{
+    --dsw-alias-bg-base:#ffffff; --dsw-alias-bg-elevated:#fbfbfd;
+    --dsw-alias-bg-hover:rgba(0,0,0,.03);
+    --dsw-alias-fill-secondary:rgba(0,0,0,.08);
+    --dsw-alias-interactive-bg-hover:rgba(0,0,0,.06);
+    --dsw-alias-interactive-bg-selected:rgba(0,0,0,.1);
+    --dsw-alias-border-l:rgba(0,0,0,.12);
+    --dsw-alias-border-default:rgba(0,0,0,.15);
+    --dsw-alias-label-primary:#111318;
+    --dsw-alias-label-secondary:#3c4149;
+    --dsw-alias-label-tertiary:#6b7280;
+    --dsw-alias-label-caption:#8b8f98;
+    --dsw-alias-label-dimmed:#9aa0a6;
+    --dsw-alias-state-business-primary:#3b82f6;
+    --dsw-alias-state-business-tertiary:#1d4ed8;
+    --dsw-alias-state-error-primary:#ef4444;
+    --dsw-alias-state-error-secondary:#dc2626;
+  }
+  html.dark{
+    --dsw-alias-bg-base:#17191d; --dsw-alias-bg-elevated:#1e2026;
+    --dsw-alias-bg-hover:rgba(255,255,255,.04);
+    --dsw-alias-fill-secondary:rgba(255,255,255,.09);
+    --dsw-alias-interactive-bg-hover:rgba(255,255,255,.07);
+    --dsw-alias-interactive-bg-selected:rgba(255,255,255,.12);
+    --dsw-alias-border-l:rgba(255,255,255,.12);
+    --dsw-alias-border-default:rgba(255,255,255,.16);
+    --dsw-alias-label-primary:#e8eaed;
+    --dsw-alias-label-secondary:#c2c7cf;
+    --dsw-alias-label-tertiary:#9aa0a6;
+    --dsw-alias-label-caption:#8b9198;
+    --dsw-alias-label-dimmed:#767c84;
+    --dsw-alias-state-business-primary:#3b82f6;
+    --dsw-alias-state-business-tertiary:#93c5fd;
+    --dsw-alias-state-error-primary:#f87171;
+    --dsw-alias-state-error-secondary:#f87171;
+  }
+  body{margin:0;padding:28px;background:var(--dsw-alias-bg-base);
+    font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}
+  .wrap{max-width:700px;margin:0 auto;}
+  .bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .bar button{padding:6px 12px;border-radius:7px;cursor:pointer;font-size:12px;
+    border:1px solid var(--dsw-alias-border-l);background:transparent;color:var(--dsw-alias-label-secondary);}
+  .bar button[data-on]{background:var(--dsw-alias-interactive-bg-selected);color:var(--dsw-alias-label-primary);}
+</style>
+<!-- ↓↓↓ client.js 里的 CSS，原样搬过来 ↓↓↓ -->
+<style>
+[data-bg]{display:flex;flex-direction:column;gap:20px;padding:4px 2px 12px;max-width:660px;
+  color:var(--dsw-alias-label-primary,inherit);font-size:13px;line-height:1.5;}
+[data-bg-head]{display:flex;flex-direction:column;gap:6px;}
+[data-bg-title]{font-size:15px;font-weight:600;letter-spacing:-.01em;}
+[data-bg-sub]{font-size:12px;line-height:1.6;color:var(--dsw-alias-label-tertiary,#9aa0a6);}
+[data-bg-card]{display:flex;flex-direction:column;
+  border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.2));
+  border-radius:12px;overflow:hidden;
+  background:var(--dsw-alias-bg-elevated,transparent);}
+[data-bg-row]{display:flex;align-items:center;gap:12px;padding:12px 14px;}
+[data-bg-row]+[data-bg-row]{border-top:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.12));}
+[data-bg-grow]{flex:1;min-width:0;}
+[data-bg-label]{font-size:13px;font-weight:500;}
+[data-bg-note]{font-size:11.5px;line-height:1.55;color:var(--dsw-alias-label-tertiary,#9aa0a6);margin-top:2px;}
+[data-bg-h]{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--dsw-alias-label-caption,#8b8b8b);margin-bottom:8px;}
+[data-bg-sw]{flex:none;width:40px;height:23px;border-radius:12px;border:0;cursor:pointer;position:relative;
+  background:var(--dsw-alias-fill-secondary,rgba(128,128,128,.3));transition:background .16s;padding:0;}
+[data-bg-sw][data-on]{background:var(--dsw-alias-state-business-primary,#3b82f6);}
+[data-bg-sw]::after{content:'';position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:9px;
+  background:#fff;transition:transform .16s;}
+[data-bg-sw][data-on]::after{transform:translateX(17px);}
+[data-bg-sw][disabled]{opacity:.45;cursor:default;}
+[data-bg-num]{width:88px;padding:6px 9px;border-radius:8px;font:inherit;font-size:13px;
+  font-variant-numeric:tabular-nums;text-align:right;color:inherit;
+  border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.28));
+  background:var(--dsw-alias-bg-base,transparent);}
+[data-bg-in]{width:100%;box-sizing:border-box;resize:vertical;min-height:86px;padding:11px 13px;border:0;
+  font:inherit;font-size:13px;line-height:1.65;color:inherit;
+  background:var(--dsw-alias-bg-base,transparent);}
+[data-bg-btn]{padding:7px 15px;border-radius:8px;cursor:pointer;font:inherit;font-size:12.5px;font-weight:500;
+  border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.28));
+  background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:inherit;
+  transition:background .12s;}
+[data-bg-btn][data-primary]{background:var(--dsw-alias-state-business-primary,#3b82f6);
+  border-color:transparent;color:#fff;}
+[data-bg-out]{padding:12px 14px;white-space:pre-wrap;word-break:break-word;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:11.5px;line-height:1.75;
+  background:var(--dsw-alias-bg-base,rgba(128,128,128,.06));
+  border-top:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.12));}
+[data-bg-msg]{font-size:12px;padding:9px 13px;border-radius:8px;display:flex;gap:8px;align-items:flex-start;
+  background:var(--dsw-alias-fill-secondary,rgba(128,128,128,.1));}
+[data-bg-msg][data-err]{background:color-mix(in srgb,var(--dsw-alias-state-error-secondary,#dc2626) 12%,transparent);
+  color:var(--dsw-alias-state-error-secondary,#dc2626);}
+[data-bg-msg][data-ok]{background:color-mix(in srgb,var(--dsw-alias-state-business-primary,#3b82f6) 12%,transparent);
+  color:var(--dsw-alias-state-business-tertiary,inherit);}
+[data-bg-foot]{font-size:11px;color:var(--dsw-alias-label-dimmed,#7a7a7a);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <button id="light" data-on>亮色</button>
+    <button id="dark">暗色</button>
+    <button id="narrow">窄屏 380</button>
+    <button id="wide" data-on>宽屏 660</button>
+  </div>
+  <div id="root">
+    <!-- 跟 Panel 渲染出来的 DOM 结构一致 -->
+    <div data-bg>
+      <div data-bg-head>
+        <div data-bg-title>八股检测</div>
+        <div data-bg-sub>一句话换个人说还成不成立？成立，就是八股。只读不改写，给坐标不给成品。</div>
+      </div>
+
+      <div>
+        <div data-bg-h>开关</div>
+        <div data-bg-card>
+          <div data-bg-row>
+            <div data-bg-grow>
+              <div data-bg-label>已开启</div>
+              <div data-bg-note>提示那一节挂上了，现在生效。</div>
+            </div>
+            <button data-bg-sw data-on role="switch" aria-checked="true" aria-label="总开关"></button>
+          </div>
+          <div data-bg-row>
+            <div data-bg-grow>
+              <div data-bg-label>提示那一节：开</div>
+              <div data-bg-note>关掉只留工具，不往提示里塞话。只想手动查的人用这个。</div>
+            </div>
+            <button data-bg-sw data-on role="switch" aria-checked="true" aria-label="提示节"></button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div data-bg-h>阈值</div>
+        <div data-bg-card>
+          <div data-bg-row>
+            <div data-bg-grow>
+              <div data-bg-label>留白词下限</div>
+              <div data-bg-note>每千字几个「好像 / 应该 / 大概」才算够。低于这个就报句句在下断言。</div>
+            </div>
+            <input data-bg-num type="number" value="0.2" step="0.1" min="0">
+          </div>
+          <div data-bg-row>
+            <div data-bg-grow>
+              <div data-bg-label>结构腔倍数</div>
+              <div data-bg-note>超过同文体基线的几倍才报。调大更宽容。</div>
+            </div>
+            <input data-bg-num type="number" value="3" step="0.1" min="0">
+          </div>
+          <div data-bg-row>
+            <div data-bg-grow>
+              <div data-bg-label>具体物下限</div>
+              <div data-bg-note>每百字至少几个数字、时间、经历、原话、名字。</div>
+            </div>
+            <input data-bg-num type="number" value="0.6" step="0.1" min="0">
+          </div>
+          <div data-bg-row>
+            <div data-bg-grow><div data-bg-note>恢复研究给出的默认值。</div></div>
+            <button data-bg-btn>恢复默认</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div data-bg-h>试一下</div>
+        <div data-bg-card>
+          <textarea data-bg-in rows="3" placeholder="粘一段话，短句也行。">这不是技术问题，而是认知问题。我们使用了新方法，采用了更好的方式，通过提升效率来优化流程。</textarea>
+          <div data-bg-row>
+            <button data-bg-btn data-primary>查一下</button>
+            <div data-bg-grow><div data-bg-note>三行摘要</div></div>
+            <button data-bg-sw role="switch" aria-checked="false" aria-label="完整报告"></button>
+          </div>
+          <div data-bg-out>有点  具体0 抽象0 评价0 留白0 结构0/千
+· 同义轮换3组
+问 「使用」「采用」「运用」挑了两个以上。同一个意思，为什么换着说？</div>
+        </div>
+      </div>
+
+      <div data-bg-msg data-ok>已保存，立刻生效。</div>
+      <div data-bg-foot>C:\Users\you\.dsh\profiles\desktop\node_modules\dsh-bagu\config.json</div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('light').onclick = () => {
+  document.documentElement.classList.remove('dark');
+  for (const id of ['light','dark']) document.getElementById(id).toggleAttribute('data-on', id === 'light');
+};
+document.getElementById('dark').onclick = () => {
+  document.documentElement.classList.add('dark');
+  for (const id of ['light','dark']) document.getElementById(id).toggleAttribute('data-on', id === 'dark');
+};
+document.getElementById('narrow').onclick = () => {
+  document.getElementById('root').style.maxWidth = '380px';
+  for (const id of ['narrow','wide']) document.getElementById(id).toggleAttribute('data-on', id === 'narrow');
+};
+document.getElementById('wide').onclick = () => {
+  document.getElementById('root').style.maxWidth = '660px';
+  for (const id of ['narrow','wide']) document.getElementById(id).toggleAttribute('data-on', id === 'wide');
+};
+</script>
+</body>
+</html>
