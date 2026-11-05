@@ -12,6 +12,7 @@
       config:
         enabled: true
         prompt: true
+        strict: false
         order: 921
         hedgeFloor: 0.5
         structureTimes: 3

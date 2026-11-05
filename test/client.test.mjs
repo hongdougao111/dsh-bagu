@@ -120,11 +120,11 @@ test('接口是 /api/bagu 的三条', () => {
   assert.ok(code.includes("'/api/bagu'"))
   assert.ok(code.includes("jget('/status')"))
   assert.ok(code.includes("jpost('/config'"))
-  assert.ok(code.includes("jpost('/preview'"))
+  assert.ok(code.includes("jpost('/guard'"), '守门器接口 /guard 必须接上')
 })
 
-test('preview 会带 full 开关', () => {
-  assert.ok(code.includes('{ text, full }'), 'preview 请求体里要带 full')
+test('守门请求带 strict 开关', () => {
+  assert.ok(code.includes('{ text, strict: view.strict }'), '/guard 请求体里要带 strict')
 })
 
 test('没写死颜色值，只允许纯白', () => {
