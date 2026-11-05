@@ -21,6 +21,11 @@
   "engines": {
     "node": ">=18"
   },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
   "os": [
     "linux",
     "darwin",
