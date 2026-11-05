@@ -1,12 +1,9 @@
 /**
  * dsh-bagu —— 浏览器半端：设置页「八股检测」
  *
- * 用在所有「AI 要对外说话」的地方：
- *   · DSH 会话里，agent 写完准备发出去之前
- *   · QQ 机器人 / 养鱼这类挂着 agent 的聊天场景
- *   · B站评论区、贴吧发帖这类公开回复
- *
- * 所以设置页的重点不是「查报告」，是「这道门开不开、多严」。
+ * 插件管的是「AI 要对外发出去的一切文字」：
+ * 聊天、评论、邮件、commit、PR、review、issue、文档、代码注释。
+ * 所以设置页的重点是「这道门开不开、多严」，不是「查报告」。
  *
  * 视觉走 --dsw-alias-* 设计变量，跟随主题。
  */
@@ -29,13 +26,16 @@ window.__ModuleLoader__.load({
       body: JSON.stringify(body || {}),
     }))
 
-    // 三种真实场景各两条：八股的长什么样，真的长什么样
+    // 每种场景一条：该拦的放前面，真话的放后面
     const SAMPLES = [
-      { label: '机器人八股', text: '这条我认！首先态度要正，其次内容要实，最后要持续更新。' },
-      { label: '评论区空夸', text: '这个视频真的很不错，非常值得一看！' },
-      { label: '会话对举', text: '这不是技术问题，而是认知问题。' },
-      { label: '评论区真话', text: '卖卡卖完了随便写了' },
-      { label: '会话真话', text: '改完了，加了 §4。第七页那个表我删了，因为原来那三列一直是空的。' },
+      { label: '聊天', text: '这条我认！首先态度要正，其次内容要实，最后要持续更新。' },
+      { label: '评论', text: '感谢分享！这个视频通过生动有趣的方式展示了相关内容，受益匪浅。' },
+      { label: 'commit', text: 'feat: 优化了用户模块的代码结构，提升了可维护性' },
+      { label: 'review', text: '整体实现思路清晰，代码结构合理，建议后续可以进一步优化。' },
+      { label: '邮件', text: '您好，关于您反馈的问题，我们已进行核实，现回复如下：经查证，该问题属于系统正常现象。' },
+      { label: '注释', text: '// 初始化计数器\nlet total = 0;\n// 遍历每个商品' },
+      { label: '真话', text: '卖卡卖完了随便写了' },
+      { label: '真话', text: '第 42 行那个 await 少了一层，函数本身没返回 promise' },
     ]
 
     const CSS = `
@@ -58,7 +58,6 @@ window.__ModuleLoader__.load({
 [data-bg-h]{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
   color:var(--dsw-alias-label-caption,#8b8b8b);margin-bottom:8px;}
 
-/* 开关 */
 [data-bg-sw]{flex:none;width:40px;height:23px;border-radius:12px;border:0;cursor:pointer;position:relative;
   background:var(--dsw-alias-fill-secondary,rgba(128,128,128,.3));transition:background .16s;padding:0;}
 [data-bg-sw][data-on]{background:var(--dsw-alias-state-business-primary,#3b82f6);}
@@ -67,20 +66,17 @@ window.__ModuleLoader__.load({
 [data-bg-sw][data-on]::after{transform:translateX(17px);}
 [data-bg-sw][disabled]{opacity:.45;cursor:default;}
 
-/* 数字 */
 [data-bg-num]{width:88px;padding:6px 9px;border-radius:8px;font:inherit;font-size:13px;
   font-variant-numeric:tabular-nums;text-align:right;color:inherit;
   border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.28));
   background:var(--dsw-alias-bg-base,transparent);}
 [data-bg-num]:focus{outline:2px solid var(--dsw-alias-state-business-primary,#3b82f6);outline-offset:-1px;}
 
-/* 文本域 */
-[data-bg-in]{width:100%;box-sizing:border-box;resize:vertical;min-height:72px;padding:11px 13px;border:0;
+[data-bg-in]{width:100%;box-sizing:border-box;resize:vertical;min-height:76px;padding:11px 13px;border:0;
   font:inherit;font-size:13px;line-height:1.65;color:inherit;
   background:var(--dsw-alias-bg-base,transparent);}
 [data-bg-in]:focus{outline:none;}
 
-/* 按钮 */
 [data-bg-btn]{padding:7px 15px;border-radius:8px;cursor:pointer;font:inherit;font-size:12.5px;font-weight:500;
   border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.28));
   background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:inherit;
@@ -90,14 +86,12 @@ window.__ModuleLoader__.load({
 [data-bg-btn][data-primary]{background:var(--dsw-alias-state-business-primary,#3b82f6);
   border-color:transparent;color:#fff;}
 
-/* 样本 chip */
 [data-bg-chips]{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 0;}
 [data-bg-chip]{padding:4px 10px;border-radius:14px;cursor:pointer;font-size:11.5px;
   border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.24));
   background:transparent;color:var(--dsw-alias-label-secondary,#555);}
 [data-bg-chip]:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1));}
 
-/* 守门结果：一条横条，绿/红 */
 [data-bg-verdict]{display:flex;align-items:center;gap:10px;padding:11px 14px;
   font-size:13px;font-weight:500;
   border-top:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.12));}
@@ -177,7 +171,7 @@ window.__ModuleLoader__.load({
         setBusy('check'); setMsg(null); setVerdict(null)
         try {
           const r = await jpost('/guard', { text, strict: view.strict })
-          if (r.ok) setVerdict({ pass: r.ok, line: r.line || 'OK', why: r.why, hint: r.hint })
+          if (r.line !== undefined) setVerdict({ pass: r.ok, line: r.line, why: r.why, hint: r.hint })
           else setMsg({ err: true, text: r.error || '查不了' })
         } catch (e) {
           setMsg({ err: true, text: '查不了：' + (e && e.message ? e.message : String(e)) })
@@ -206,9 +200,9 @@ window.__ModuleLoader__.load({
         h('div', { 'data-bg-head': '' },
           h('div', { 'data-bg-title': '' }, '八股检测'),
           h('div', { 'data-bg-sub': '' },
-            'AI 要对外说话之前的一道门。DSH 会话、QQ 机器人、B站评论，都算。过了就发，没过就打回。')),
+            'AI 要对外发出去的文字，先过一道。聊天、评论、邮件、commit、PR、文档、注释，都算。')),
 
-        // ── 开关 ─────────────────────────────
+        // ── 挡不挡 ───────────────────────────
         h('div', null,
           h('div', { 'data-bg-h': '' }, '挡不挡'),
           h('div', { 'data-bg-card': '' },
@@ -221,7 +215,7 @@ window.__ModuleLoader__.load({
               label: view.strict ? '严格：轻的也拦' : '正常：只拦明显的',
               note: view.strict
                 ? '破折号、只有评价没有具体东西，这些也打回。'
-                : '只拦模板三连、不是A而是B、同义轮换这类硬信号。',
+                : '只拦模板三连、对举、同义轮换、空转、空形容词这类硬信号。',
             }, h(Switch, {
               on: view.strict === true, label: '严格模式', disabled: busy === 'save' || !on,
               onChange: () => save({ strict: view.strict !== true }),
@@ -229,23 +223,24 @@ window.__ModuleLoader__.load({
 
             h(Row, {
               label: view.prompt !== false ? '提示那一节：开' : '提示那一节：关',
-              note: '关掉只留工具，不往提示里塞话。',
+              note: '关掉只留工具，不往系统提示里塞话。',
             }, h(Switch, {
               on: view.prompt !== false, label: '提示节', disabled: busy === 'save' || !on,
               onChange: () => save({ prompt: view.prompt === false }),
             })))),
 
-        // ── 试一下 ───────────────────────────
+        // ── 试一段 ───────────────────────────
         h('div', null,
-          h('div', { 'data-bg-h': '' }, '试一条'),
+          h('div', { 'data-bg-h': '' }, '试一段'),
           h('div', { 'data-bg-card': '' },
             h('div', { 'data-bg-chips': '' },
               SAMPLES.map((s, i) => h('button', {
-                key: i, 'data-bg-chip': '', onClick: () => { setText(s.text); setVerdict(null) },
+                key: i, 'data-bg-chip': '',
+                onClick: () => { setText(s.text); setVerdict(null) },
               }, s.label))),
             h('textarea', {
               'data-bg-in': '', value: text, rows: 3,
-              placeholder: '粘一条准备发出去的回复',
+              placeholder: '粘一段准备发出去的文字。聊天、commit、邮件都行。',
               onChange: (e) => { setText(e.target.value); setVerdict(null) },
             }),
             h('div', { 'data-bg-row': '' },
