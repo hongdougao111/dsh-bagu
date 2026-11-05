@@ -1,0 +1,38 @@
+{
+  "name": "dsh-bagu",
+  "version": "0.1.0",
+  "description": "八股检测：判断一句话是不是「谁都能说」。AI 味不是礼貌问题，是可替换问题。",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "dsh-plugin.json",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "os": [
+    "linux",
+    "darwin",
+    "win32"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "中文",
+    "AI味",
+    "八股",
+    "写作"
+  ]
+}
