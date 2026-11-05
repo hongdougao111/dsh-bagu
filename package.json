@@ -1,7 +1,7 @@
 {
   "name": "dsh-bagu",
-  "version": "0.4.0",
-  "description": "AI 要对外说话之前的一道门。DSH 会话、QQ 机器人、B站评论都算。过了就发，没过就打回。",
+  "version": "0.5.0",
+  "description": "AI 对外说话前的一道门。聊天、评论、邮件、commit、PR、文档、注释都管：过了就发，没过就打回。",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -65,7 +65,10 @@
     "中文",
     "AI味",
     "八股",
-    "写作"
+    "写作",
+    "commit",
+    "review",
+    "注释"
   ],
   "devDependencies": {
     "happy-dom": "^21.0.4"

@@ -46,13 +46,24 @@ test('空输入直接放过', () => {
   assert.equal(guard('   ').ok, true);
 });
 
-test('长文不当聊天回复拦', () => {
-  // 门槛是 300 字：QQ 机器人一条回复二三十字，超过这个量级的是文档不是聊天
-  const long = '先说明一下背景。这个项目从去年开始，中间换过两次负责人，第一次是团队重组，第二次是预算砍掉了一半。现在剩下的人手只够维护，不够做新功能。'.repeat(6);
-  assert.ok(long.length > 300, '样本得够长，实际 ' + long.length);
-  const r = guard(long);
-  assert.equal(r.ok, true);
-  assert.equal(r.skipped, 'too-long');
+test('长文不跳过，看内容判断', () => {
+  // 300 字以上曾经一律放过，这是个漏洞：长邮件、长周报一样八股。
+  // 现在长文照样过规则，只是同一信号要出现两次以上才算。
+  const longReal = ('昨晚十一点半我第三次跑那个脚本，又卡在 8443 端口上了。日志里就一行 EADDRINUSE。' +
+    '后来把之前那个进程 kill 掉就好了，大概是我自己忘了关。').repeat(6);
+  assert.ok(longReal.length > 300, '样本得够长，实际 ' + longReal.length);
+  const r = guard(longReal);
+  assert.equal(r.ok, true, '长真话该放过，实际 ' + r.line);
+  assert.equal(r.skipped, undefined, '不该再走 too-long 跳过路径');
+});
+
+test('长邮件要拦', () => {
+  const longEmail = ('您好，关于您反馈的问题，我们已进行核实，现回复如下：经查证，该问题属于系统正常现象，建议您稍后重试。' +
+    '同时，我们也会持续优化产品体验，为您提供更好的服务。如有其他问题，欢迎随时联系我们。' +
+    '感谢您的理解与支持，祝您生活愉快！').repeat(4);
+  assert.ok(longEmail.length > 300);
+  const r = guard(longEmail);
+  assert.equal(r.ok, false, '长邮件该拦，实际放过了');
 });
 
 test('严格模式多拦两条', () => {
