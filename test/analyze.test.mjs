@@ -116,13 +116,13 @@ test('#1.1 真正的标识符仍然计入', () => {
   assert.ok(ids.some((t) => t.includes('EADDRINUSE')));
 });
 
-test('#1.2 experience 和 sense 的权重高于 number 和 ident', () => {
-  const a = concreteness('我昨天试了一下，手都酸了。');
-  const b = concreteness('版本 1.2.3，路径 /a/b/c，端口 8080。');
-  assert.ok(a.weighted > 0);
-  assert.ok(b.weighted > 0);
-  // a 是两条经历类，b 是两条数字/路径类，按权重 a 应该更高
-  assert.ok(a.weighted >= b.weighted, `experience 权重不足: a=${a.weighted} b=${b.weighted}`);
+test('#1.2 可核验的数字路径权重高于可编造的经历（方向修正）', () => {
+  // 上一版把 experience/sense 给到 1.5，理由是「难伪造」。
+  // 这是错的：经历最好编，三样凑齐就是模板。数字和路径可核验，反而该给分。
+  const fabricated = concreteness('我昨天试着改了一下，折腾到凌晨两点半才跑通，手都酸了。');
+  const real = concreteness('配置文件在 /etc/app/config.yml，端口 8080，版本 v1.4.2。');
+  assert.ok(real.weighted > fabricated.weighted,
+    `真实配置该比编造经历高: real=${real.weighted} fabricated=${fabricated.weighted}`);
 });
 
 test('#1.4 具体物充足时往回减一格', () => {
