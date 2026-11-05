@@ -10,6 +10,7 @@
   },
   "files": [
     "lib",
+    "test",
     "dsh-plugin.json",
     "cordis.patch.yml",
     "README.md",
