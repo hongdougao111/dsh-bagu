@@ -3,9 +3,9 @@
   "manifestVersion": "0.15",
   "id": "dsh-bagu",
   "name": "dsh-bagu",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "license": "MIT",
-  "description": "八股检测：数具体物、撑场面的话、留白词、结构腔密度。只读不改写。",
+  "description": "AI 要对外说话之前的一道门：过了就发，没过就打回。",
   "facets": {
     "host": {
       "entry": "lib/index.js",
@@ -29,7 +29,7 @@
     "x-display": [
       {
         "title": "dsh-bagu",
-        "description": "查一段话有多可替换：具体性、抽象度、留白、结构腔，带设置页，只给问句不自动改"
+        "description": "每条对外回复发出前过一遍，像八股就打回。只回 OK 或一行改法。"
       }
     ]
   }

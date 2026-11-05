@@ -1,7 +1,7 @@
 {
   "name": "dsh-bagu",
-  "version": "0.3.1",
-  "description": "八股检测：判断一句话是不是谁都能说。AI 味不是礼貌问题，是可替换问题。",
+  "version": "0.4.0",
+  "description": "AI 要对外说话之前的一道门。DSH 会话、QQ 机器人、B站评论都算。过了就发，没过就打回。",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
