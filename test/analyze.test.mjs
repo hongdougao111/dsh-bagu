@@ -12,9 +12,14 @@ test('典型八股判成 heavy', () => {
     '本次修改已完成。首先调整了章节结构，其次新增了规则条款，最后优化了可读性。' +
     '综上所述，这次改动具有重要意义，希望对你有帮助。'
   );
-  assert.equal(r.band, 'heavy');
-  assert.ok(r.scores.aiWords >= 1);
-  assert.ok(r.scores.structurePer1k > r.baseline * 3);
+  assert.ok(r.band === 'heavy' || r.band === 'mid', '实际 ' + r.band);
+  assert.ok(r.scores.aiWords >= 1, '该认出「综上所述」这类词');
+});
+
+test('「首先/其次」单独不再算结构腔（lieflat δ+0.02 失效）', () => {
+  const r = analyze('首先备份，其次改配置，最后重启。数据库密码记得先换掉，不然白改。');
+  const hasRoadmap = r.hits.structures.some((x) => x.id === 'roadmap');
+  assert.equal(hasRoadmap, false, 'roadmap 不该再出现在结构腔里');
 });
 
 test('具体的现场描述判成 low', () => {
@@ -132,10 +137,16 @@ test('#1.4 具体物充足时往回减一格', () => {
     `具体的那段不该比空话更可疑: rich=${rich.scores.replaceable} empty=${empty.scores.replaceable}`);
 });
 
-test('#1.8 六十个字以下不给判档', () => {
-  const r = analyze('这个挺好。');
-  assert.equal(r.band, 'too-short');
-  assert.ok(r.bandNote.includes('六十字'), 'bandNote: ' + r.bandNote);
+test('短句走绝对计数，不看密度', () => {
+  const ai = analyze('这不是技术问题，而是认知问题。');
+  const human = analyze('卖卡卖完了随便写了');
+  assert.equal(ai.band, 'heavy', 'AI 对举应判可疑，实际 ' + ai.band);
+  assert.equal(human.band, 'low', '真人短评应判正常，实际 ' + human.band);
+});
+
+test('短句：同义轮换能被抓到', () => {
+  const r = analyze('我们使用了新方法，采用了更好的方式，通过提升效率来优化流程。');
+  assert.ok(r.synonyms.length >= 2, '应抓到多组轮换，实际 ' + JSON.stringify(r.synonyms));
 });
 
 test('#1.8 六十字以上照常判档', () => {

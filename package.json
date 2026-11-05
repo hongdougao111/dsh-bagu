@@ -1,6 +1,6 @@
 {
   "name": "dsh-bagu",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "八股检测：判断一句话是不是谁都能说。AI 味不是礼貌问题，是可替换问题。",
   "type": "module",
   "main": "lib/index.js",
@@ -66,5 +66,8 @@
     "AI味",
     "八股",
     "写作"
-  ]
+  ],
+  "devDependencies": {
+    "happy-dom": "^21.0.4"
+  }
 }
