@@ -3,6 +3,8 @@
 #   insert: 往配置树里加一行 entry
 #   id:     这一行的唯一标识（用户层可按 id 覆盖 config）
 #   name:   'dsh-bagu' 解析到本包入口 lib/index.js
+#
+# 这里只给初始值；设置页改过的会写进插件目录的 config.json，以那边为准。
 
 - insert:
     - id: bagu
@@ -11,3 +13,6 @@
         enabled: true
         prompt: true
         order: 921
+        hedgeFloor: 0.5
+        structureTimes: 3
+        concreteFloor: 0.6

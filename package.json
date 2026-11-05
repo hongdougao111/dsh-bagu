@@ -1,16 +1,18 @@
 {
   "name": "dsh-bagu",
-  "version": "0.1.0",
-  "description": "八股检测：判断一句话是不是「谁都能说」。AI 味不是礼貌问题，是可替换问题。",
+  "version": "0.2.0",
+  "description": "八股检测：判断一句话是不是谁都能说。AI 味不是礼貌问题，是可替换问题。",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
+    "./client": "./client.js",
     "./package.json": "./package.json"
   },
   "files": [
     "lib",
     "test",
+    "client.js",
     "dsh-plugin.json",
     "cordis.patch.yml",
     "README.md",
@@ -25,6 +27,14 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-settings-plugins"
+      ]
     }
   },
   "os": [
