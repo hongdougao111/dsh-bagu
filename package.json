@@ -43,6 +43,22 @@
     "win32"
   ],
   "license": "MIT",
+  "author": {
+    "name": "hongdougao111",
+    "url": "https://github.com/hongdougao111"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hongdougao111/dsh-bagu.git"
+  },
+  "homepage": "https://github.com/hongdougao111/dsh-bagu#readme",
+  "bugs": {
+    "url": "https://github.com/hongdougao111/dsh-bagu/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "keywords": [
     "dsh",
     "dsh-plugin",
