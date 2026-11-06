@@ -39,87 +39,153 @@ window.__ModuleLoader__.load({
     ]
 
     const CSS = `
-[data-bg]{display:flex;flex-direction:column;gap:20px;padding:4px 2px 12px;max-width:660px;
-  color:var(--dsw-alias-label-primary,inherit);font-size:13px;line-height:1.5;}
+[data-bg]{display:flex;flex-direction:column;gap:26px;padding:8px 4px 20px;max-width:680px;
+  color:var(--dsw-alias-label-primary,inherit);font-size:13.5px;
+  line-height:1.55;-webkit-font-smoothing:antialiased;}
 
-[data-bg-head]{display:flex;flex-direction:column;gap:6px;}
-[data-bg-title]{font-size:15px;font-weight:600;letter-spacing:-.01em;}
-[data-bg-sub]{font-size:12px;line-height:1.6;color:var(--dsw-alias-label-tertiary,#9aa0a6);}
+/* 顶部 */
+[data-bg-head]{display:flex;flex-direction:column;gap:5px;padding-bottom:16px;
+  border-bottom:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.16));}
+[data-bg-title]{font-size:17px;font-weight:600;letter-spacing:-.015em;}
+[data-bg-sub]{font-size:12.5px;line-height:1.65;
+  color:var(--dsw-alias-label-tertiary,#9aa0a6);max-width:52ch;}
 
+/* 分区 */
+[data-bg-h]{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;
+  letter-spacing:.02em;color:var(--dsw-alias-label-secondary,#6b7280);margin-bottom:10px;}
+[data-bg-h]::before{content:'';width:3px;height:12px;border-radius:2px;
+  background:var(--dsw-alias-state-business-primary,#3b82f6);opacity:.75;}
+[data-bg-sec]{display:flex;flex-direction:column;}
+
+/* 卡片 */
 [data-bg-card]{display:flex;flex-direction:column;
-  border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.2));
-  border-radius:12px;overflow:hidden;
-  background:var(--dsw-alias-bg-elevated,transparent);}
-[data-bg-row]{display:flex;align-items:center;gap:12px;padding:12px 14px;}
-[data-bg-row]+[data-bg-row]{border-top:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.12));}
-[data-bg-grow]{flex:1;min-width:0;}
-[data-bg-label]{font-size:13px;font-weight:500;}
-[data-bg-note]{font-size:11.5px;line-height:1.55;color:var(--dsw-alias-label-tertiary,#9aa0a6);margin-top:2px;}
-[data-bg-h]{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
-  color:var(--dsw-alias-label-caption,#8b8b8b);margin-bottom:8px;}
-
-[data-bg-sw]{flex:none;width:40px;height:23px;border-radius:12px;border:0;cursor:pointer;position:relative;
-  background:var(--dsw-alias-fill-secondary,rgba(128,128,128,.3));transition:background .16s;padding:0;}
-[data-bg-sw][data-on]{background:var(--dsw-alias-state-business-primary,#3b82f6);}
-[data-bg-sw]::after{content:'';position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:9px;
-  background:#fff;transition:transform .16s;}
-[data-bg-sw][data-on]::after{transform:translateX(17px);}
-[data-bg-sw][disabled]{opacity:.45;cursor:default;}
-
-[data-bg-num][data-wide]{width:200px;text-align:left;font-variant-numeric:normal;}
-[data-bg-num]{width:88px;padding:6px 9px;border-radius:8px;font:inherit;font-size:13px;
-  font-variant-numeric:tabular-nums;text-align:right;color:inherit;
-  border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.28));
-  background:var(--dsw-alias-bg-base,transparent);}
-[data-bg-num]:focus{outline:2px solid var(--dsw-alias-state-business-primary,#3b82f6);outline-offset:-1px;}
-
-[data-bg-in]{width:100%;box-sizing:border-box;resize:vertical;min-height:76px;padding:11px 13px;border:0;
-  font:inherit;font-size:13px;line-height:1.65;color:inherit;
-  background:var(--dsw-alias-bg-base,transparent);}
-[data-bg-in]:focus{outline:none;}
-
-[data-bg-btn]{padding:7px 15px;border-radius:8px;cursor:pointer;font:inherit;font-size:12.5px;font-weight:500;
-  border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.28));
-  background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:inherit;
+  border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.18));
+  border-radius:14px;overflow:hidden;
+  background:var(--dsw-alias-bg-elevated,rgba(128,128,128,.03));
+  box-shadow:0 1px 2px rgba(0,0,0,.03);}
+[data-bg-row]{display:flex;align-items:center;gap:14px;padding:14px 16px;min-height:52px;
   transition:background .12s;}
-[data-bg-btn]:hover:not([disabled]){background:var(--dsw-alias-interactive-bg-selected,rgba(128,128,128,.2));}
-[data-bg-btn][disabled]{opacity:.45;cursor:default;}
-[data-bg-btn][data-primary]{background:var(--dsw-alias-state-business-primary,#3b82f6);
-  border-color:transparent;color:#fff;}
+[data-bg-row]:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.04));}
+[data-bg-row]+[data-bg-row]{border-top:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.1));}
+[data-bg-grow]{flex:1;min-width:0;}
+[data-bg-label]{font-size:13.5px;font-weight:500;letter-spacing:-.005em;}
+[data-bg-note]{font-size:11.5px;line-height:1.6;
+  color:var(--dsw-alias-label-tertiary,#9aa0a6);margin-top:3px;max-width:46ch;}
+[data-bg-off] [data-bg-label],[data-bg-off] [data-bg-note]{opacity:.5;}
 
-[data-bg-chips]{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 0;}
-[data-bg-chip]{padding:4px 10px;border-radius:14px;cursor:pointer;font-size:11.5px;
+/* 开关 */
+[data-bg-sw]{flex:none;width:44px;height:25px;border-radius:13px;border:0;cursor:pointer;
+  position:relative;padding:0;transition:background .18s ease;
+  background:var(--dsw-alias-fill-secondary,rgba(128,128,128,.28));}
+[data-bg-sw][data-on]{background:var(--dsw-alias-state-business-primary,#3b82f6);}
+[data-bg-sw]::after{content:'';position:absolute;top:3px;left:3px;width:19px;height:19px;
+  border-radius:10px;background:#fff;transition:transform .18s cubic-bezier(.3,.8,.4,1);
+  box-shadow:0 1px 3px rgba(0,0,0,.18);}
+[data-bg-sw][data-on]::after{transform:translateX(19px);}
+[data-bg-sw][disabled]{opacity:.4;cursor:default;}
+
+/* 输入 */
+[data-bg-num]{width:84px;padding:7px 10px;border-radius:9px;font:inherit;font-size:13.5px;
+  font-variant-numeric:tabular-nums;text-align:right;color:inherit;
   border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.24));
-  background:transparent;color:var(--dsw-alias-label-secondary,#555);}
-[data-bg-chip]:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1));}
+  background:var(--dsw-alias-bg-base,transparent);transition:border-color .12s;}
+[data-bg-num]:hover:not([disabled]){border-color:var(--dsw-alias-border-l,rgba(128,128,128,.4));}
+[data-bg-num][data-wide]{width:210px;text-align:left;font-variant-numeric:normal;}
+[data-bg-num]:focus{outline:none;border-color:var(--dsw-alias-state-business-primary,#3b82f6);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--dsw-alias-state-business-primary,#3b82f6) 18%,transparent);}
 
-[data-bg-verdict]{display:flex;align-items:center;gap:10px;padding:11px 14px;
-  font-size:13px;font-weight:500;
-  border-top:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.12));}
-[data-bg-verdict][data-pass]{background:color-mix(in srgb,var(--dsw-alias-state-business-primary,#3b82f6) 9%,transparent);
+[data-bg-in]{width:100%;box-sizing:border-box;resize:vertical;min-height:88px;
+  padding:13px 15px;border:0;font:inherit;font-size:13.5px;line-height:1.7;color:inherit;
+  background:transparent;}
+[data-bg-in]:focus{outline:none;}
+[data-bg-in]::placeholder{color:var(--dsw-alias-label-dimmed,#a1a1aa);}
+
+/* 滑杆 */
+[data-bg-range]{-webkit-appearance:none;appearance:none;width:190px;height:5px;border-radius:3px;
+  background:var(--dsw-alias-fill-secondary,rgba(128,128,128,.26));outline:none;cursor:pointer;
+  transition:background .12s;}
+[data-bg-range]:hover:not([disabled]){background:var(--dsw-alias-fill-secondary,rgba(128,128,128,.36));}
+[data-bg-range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:9px;
+  background:var(--dsw-alias-state-business-primary,#3b82f6);cursor:pointer;border:0;
+  box-shadow:0 1px 4px rgba(0,0,0,.2);transition:transform .1s;}
+[data-bg-range]::-webkit-slider-thumb:active{transform:scale(1.15);}
+[data-bg-range]:disabled{opacity:.4;cursor:default;}
+[data-bg-tone]{flex:none;min-width:52px;text-align:right;font-size:12.5px;font-variant-numeric:tabular-nums;
+  color:var(--dsw-alias-label-tertiary,#9aa0a6);}
+
+/* 按钮 */
+[data-bg-btn]{padding:8px 16px;border-radius:9px;cursor:pointer;font:inherit;font-size:12.5px;
+  font-weight:500;letter-spacing:-.005em;
+  border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.24));
+  background:transparent;color:inherit;transition:all .12s;}
+[data-bg-btn]:hover:not([disabled]){background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.08));
+  border-color:var(--dsw-alias-border-l,rgba(128,128,128,.4));}
+[data-bg-btn][disabled]{opacity:.4;cursor:default;}
+[data-bg-btn][data-primary]{background:var(--dsw-alias-state-business-primary,#3b82f6);
+  border-color:transparent;color:#fff;box-shadow:0 1px 3px rgba(59,130,246,.3);}
+[data-bg-btn][data-primary]:hover:not([disabled]){filter:brightness(.94);}
+
+/* 样本 chip */
+[data-bg-chips]{display:flex;flex-wrap:wrap;gap:7px;padding:13px 16px 4px;}
+[data-bg-chip]{padding:5px 11px;border-radius:20px;cursor:pointer;font-size:11.5px;
+  border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.2));
+  background:transparent;color:var(--dsw-alias-label-secondary,#71717a);
+  transition:all .12s;}
+[data-bg-chip]:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.08));
+  border-color:var(--dsw-alias-border-l,rgba(128,128,128,.36));
+  color:var(--dsw-alias-label-primary,inherit);}
+
+/* 判定 */
+[data-bg-verdict]{display:flex;align-items:center;gap:10px;padding:13px 16px;
+  font-size:13px;font-weight:500;border-top:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.1));}
+[data-bg-verdict][data-pass]{background:color-mix(in srgb,var(--dsw-alias-state-business-primary,#3b82f6) 8%,transparent);
   color:var(--dsw-alias-state-business-tertiary,#1d4ed8);}
-[data-bg-verdict][data-block]{background:color-mix(in srgb,var(--dsw-alias-state-error-secondary,#dc2626) 9%,transparent);
+[data-bg-verdict][data-block]{background:color-mix(in srgb,var(--dsw-alias-state-error-secondary,#dc2626) 8%,transparent);
   color:var(--dsw-alias-state-error-secondary,#dc2626);}
-[data-bg-dot]{flex:none;width:7px;height:7px;border-radius:4px;background:currentColor;}
+[data-bg-dot]{flex:none;width:7px;height:7px;border-radius:4px;background:currentColor;
+  box-shadow:0 0 0 3px color-mix(in srgb,currentColor 15%,transparent);}
 [data-bg-verdict-text]{flex:1;min-width:0;}
 
-[data-bg-msg]{font-size:12px;padding:9px 13px;border-radius:8px;
-  background:var(--dsw-alias-fill-secondary,rgba(128,128,128,.1));}
-[data-bg-msg][data-err]{background:color-mix(in srgb,var(--dsw-alias-state-error-secondary,#dc2626) 12%,transparent);
+/* 提示条 */
+[data-bg-msg]{font-size:12.5px;padding:10px 14px;border-radius:10px;
+  background:var(--dsw-alias-fill-secondary,rgba(128,128,128,.08));}
+[data-bg-msg][data-err]{background:color-mix(in srgb,var(--dsw-alias-state-error-secondary,#dc2626) 10%,transparent);
   color:var(--dsw-alias-state-error-secondary,#dc2626);}
-[data-bg-msg][data-ok]{background:color-mix(in srgb,var(--dsw-alias-state-business-primary,#3b82f6) 12%,transparent);
-  color:var(--dsw-alias-state-business-tertiary,inherit);}
+[data-bg-msg][data-ok]{background:color-mix(in srgb,var(--dsw-alias-state-business-primary,#3b82f6) 10%,transparent);
+  color:var(--dsw-alias-state-business-tertiary,#1d4ed8);}
 
-[data-bg-foot]{font-size:11px;color:var(--dsw-alias-label-dimmed,#7a7a7a);
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all;}
+/* 页脚 */
+[data-bg-foot]{font-size:11px;color:var(--dsw-alias-label-dimmed,#a1a1aa);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all;opacity:.7;}
 
-[data-bg-skel]{height:64px;border-radius:12px;
-  background:linear-gradient(90deg,var(--dsw-alias-fill-secondary,rgba(128,128,128,.08)) 25%,
-    var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.14)) 37%,
-    var(--dsw-alias-fill-secondary,rgba(128,128,128,.08)) 63%);
-  background-size:400% 100%;animation:bg-shimmer 1.4s ease infinite;}
+/* 骨架 */
+[data-bg-skel]{height:68px;border-radius:14px;
+  background:linear-gradient(90deg,var(--dsw-alias-fill-secondary,rgba(128,128,128,.06)) 25%,
+    var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12)) 37%,
+    var(--dsw-alias-fill-secondary,rgba(128,128,128,.06)) 63%);
+  background-size:400% 100%;animation:bg-shimmer 1.5s ease infinite;}
 @keyframes bg-shimmer{0%{background-position:100% 50%}100%{background-position:0 50%}}
-`
+
+/* 库信息小标 */
+[data-bg-badge]{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:10px;
+  font-size:11px;font-weight:500;letter-spacing:0;
+  background:color-mix(in srgb,var(--dsw-alias-state-business-primary,#3b82f6) 10%,transparent);
+  color:var(--dsw-alias-state-business-tertiary,#1d4ed8);}
+`;
+    function toneLabel(v) {
+      const n = Number(v) || 0
+      if (n <= 20) return '很收着'
+      if (n <= 45) return '有点度'
+      if (n <= 70) return '跟着玩'
+      return '放得开'
+    }
+    function toneNote(v) {
+      const n = Number(v) || 0
+      if (n <= 20) return '只接正面的、自嘲的。带贬义的外号不复读，不跟着起哄。'
+      if (n <= 45) return '损发挥可以，损长相、损身体不行。别人先开的头，接半句。'
+      if (n <= 70) return '社区玩什么就接什么，不自己发明。分寸跟着对方的调子走。'
+      return '带刺的也能接。但对方认真了就立刻停。'
+    }
 
     function Row(props) {
       return h('div', { 'data-bg-row': '' },
@@ -201,10 +267,14 @@ window.__ModuleLoader__.load({
         h('div', { 'data-bg-head': '' },
           h('div', { 'data-bg-title': '' }, '八股检测'),
           h('div', { 'data-bg-sub': '' },
-            'AI 要对外发出去的文字，先过一道。聊天、评论、邮件、commit、PR、文档、注释，都算。')),
+            'AI 要发出去的文字，先过一道 —— 聊天、评论、邮件、commit、PR、文档、注释都算。',
+            st.memeTotal
+              ? h('div', { style: { marginTop: '8px' } },
+                  h('span', { 'data-bg-badge': '' }, '梗库 ' + st.memeTotal + ' 条 · 梗Wiki'))
+              : null)),
 
         // ── 挡不挡 ───────────────────────────
-        h('div', null,
+        h('div', { 'data-bg-sec': '' },
           h('div', { 'data-bg-h': '' }, '挡不挡'),
           h('div', { 'data-bg-card': '' },
             h(Row, {
@@ -228,19 +298,58 @@ window.__ModuleLoader__.load({
             }, h(Switch, {
               on: view.prompt !== false, label: '提示节', disabled: busy === 'save' || !on,
               onChange: () => save({ prompt: view.prompt === false }),
+            })))),
+
+        // ── 玩梗 ────────────────────────────
+        h('div', { 'data-bg-sec': '' },
+          h('div', { 'data-bg-h': '' }, '玩梗'),
+          h('div', { 'data-bg-card': '' },
+            h(Row, {
+              label: view.memes !== false ? '梗库：开' : '梗库：关',
+              note: st.memeTotal
+                ? `内置 ${st.memeTotal} 条词条。对方抛出梗来，模型不用去猜、不用联网搜。`
+                : '内置词条库，装了就有。',
+            }, h(Switch, {
+              on: view.memes !== false, label: '梗库', disabled: busy === 'save' || !on,
+              onChange: () => save({ memes: view.memes === false }),
             })),
 
             h(Row, {
-              label: view.memes ? '梗库：开' : '梗库：关',
-              note: '开 = 多一个接梗工具，看对方说了什么梗，给出同族能接的。' +
-                    '它判的是「这个梗过气了没」，跟八股无关，所以默认关。',
+              label: view.autoMeme !== false ? '每轮自动查：开' : '每轮自动查：关',
+              note: '开 = 你一说含梗的话，查好的结果就塞进上下文，模型直接接。' +
+                    '关 = 只在模型主动查的时候才查。',
             }, h(Switch, {
-              on: view.memes === true, label: '梗库', disabled: busy === 'save' || !on,
-              onChange: () => save({ memes: view.memes !== true }),
-            })))),
+              on: view.autoMeme !== false, label: '自动查梗',
+              disabled: busy === 'save' || !on || view.memes === false,
+              onChange: () => save({ autoMeme: view.autoMeme === false }),
+            })),
+
+            h(Row, {
+              label: view.toneSwitch ? '尺度：自己定' : '尺度：交给模型',
+              note: view.toneSwitch
+                ? '下面这个滑杆管着它能玩多野。'
+                : '关着时模型看场合自己判断。想手动接管就打开。',
+            }, h(Switch, {
+              on: view.toneSwitch === true, label: '尺度开关',
+              disabled: busy === 'save' || !on || view.memes === false,
+              onChange: () => save({ toneSwitch: view.toneSwitch !== true }),
+            })),
+
+            view.toneSwitch ? h('div', { 'data-bg-row': '' },
+              h('div', { 'data-bg-grow': '' },
+                h('div', { 'data-bg-label': '' }, toneLabel(view.toneLevel)),
+                h('div', { 'data-bg-note': '' }, toneNote(view.toneLevel))),
+              h('input', {
+                'data-bg-range': '', type: 'range', min: '0', max: '100', step: '5',
+                value: view.toneLevel ?? 50, disabled: busy === 'save',
+                onChange: (e) => setView({ ...view, toneLevel: Number(e.target.value) }),
+                onMouseUp: (e) => save({ toneLevel: Number(e.target.value) }),
+                onTouchEnd: (e) => save({ toneLevel: Number(e.target.value) }),
+              }),
+              h('div', { 'data-bg-tone': '' }, String(view.toneLevel ?? 50))) : null)),
 
         // ── AI 接梗（默认走会话模型，不用填 key）──────────
-        h('div', null,
+        h('div', { 'data-bg-sec': '' },
           h('div', { 'data-bg-h': '' }, 'AI 接梗'),
           h('div', { 'data-bg-card': '' },
             h(Row, {
@@ -304,6 +413,65 @@ window.__ModuleLoader__.load({
                 onChange: (e) => setView({ ...view, aiApiKey: e.target.value }),
                 onBlur: () => { if (view.aiApiKey !== st.config.aiApiKey) save({ aiApiKey: view.aiApiKey }) },
               })) : null)),
+
+        // ── 试一段 ──────────────────────────
+        h('div', { 'data-bg-sec': '' },
+          h('div', { 'data-bg-h': '' }, '试一段'),
+          h('div', { 'data-bg-card': '' },
+            h('div', { 'data-bg-chips': '' },
+              SAMPLES.map((s, i) => h('button', {
+                key: i, 'data-bg-chip': '',
+                onClick: () => { setText(s.text); setVerdict(null) },
+              }, s.label))),
+            h('textarea', {
+              'data-bg-in': '', value: text, rows: 3,
+              placeholder: '粘一段准备发出去的文字。聊天、commit、邮件都行。',
+              onChange: (e) => { setText(e.target.value); setVerdict(null) },
+            }),
+            h('div', { 'data-bg-row': '' },
+              h('button', {
+                'data-bg-btn': '', 'data-primary': '',
+                disabled: busy === 'check', onClick: check,
+              }, busy === 'check' ? '过着…' : '过一遍'),
+              h('div', { 'data-bg-grow': '' },
+                h('div', { 'data-bg-note': '' }, verdict
+                  ? (verdict.pass ? '能发。直接发就行。' : '打回了。按下面那句改。')
+                  : '粘一段准备发出去的文字，看看能不能过'))),
+            verdict ? h('div', {
+              'data-bg-verdict': '',
+              'data-pass': verdict.pass ? '' : undefined,
+              'data-block': verdict.pass ? undefined : '',
+            },
+              h('div', { 'data-bg-dot': '' }),
+              h('div', { 'data-bg-verdict-text': '' }, verdict.line),
+            ) : null)),
+
+        // ── 阈值 ────────────────────────────
+        h('div', { 'data-bg-sec': '' },
+          h('div', { 'data-bg-h': '' }, '阈值'),
+          h('div', { 'data-bg-card': '' },
+            h(Row, {
+              label: '留白词下限',
+              note: '每千字几个「好像 / 应该 / 大概」。低于这个就报句句在下断言。',
+            }, num('hedgeFloor')),
+            h(Row, {
+              label: '结构腔倍数',
+              note: '超过同文体基线的几倍才报。调大更宽容。',
+            }, num('structureTimes')),
+            h(Row, {
+              label: '具体物下限',
+              note: '每百字至少几个数字、时间、经历、原话、名字。',
+            }, num('concreteFloor')),
+            h('div', { 'data-bg-row': '' },
+              h('div', { 'data-bg-grow': '' }, h('div', { 'data-bg-note': '' }, '恢复默认。')),
+              h('button', {
+                'data-bg-btn': '', disabled: busy === 'save',
+                onClick: () => save({
+                  hedgeFloor: st.defaults.hedgeFloor,
+                  structureTimes: st.defaults.structureTimes,
+                  concreteFloor: st.defaults.concreteFloor,
+                }),
+              }, '恢复默认')))),
 
         msg ? h('div', {
           'data-bg-msg': '', 'data-err': msg.err ? '' : undefined, 'data-ok': msg.ok ? '' : undefined,

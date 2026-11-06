@@ -41,7 +41,7 @@ test('注册了 bagu:prefetch', async () => {
   const fs = await import('node:fs');
   const had = fs.existsSync('./config.json');
   const bak = had ? fs.readFileSync('./config.json', 'utf8') : null;
-  fs.writeFileSync('./config.json', JSON.stringify({ enabled: true, memes: true }));
+  fs.writeFileSync('./config.json', JSON.stringify({ enabled: true, memes: true, autoMeme: true }));
   try {
     apply(root, {});
   } finally {
@@ -73,7 +73,7 @@ test('有梗的消息能算出注入文本', async () => {
   };
   const fs = await import('node:fs');
   const bak = fs.existsSync('./config.json') ? fs.readFileSync('./config.json', 'utf8') : null;
-  fs.writeFileSync('./config.json', JSON.stringify({ enabled: true, memes: true }));
+  fs.writeFileSync('./config.json', JSON.stringify({ enabled: true, memes: true, autoMeme: true }));
   try {
     apply(root, {});
     const c = ctxs[0];
@@ -81,14 +81,14 @@ test('有梗的消息能算出注入文本', async () => {
       agent: {
         session: {
           snapshotEvents: () => [
-            { type: 'user/message', payload: { content: '这不就是瞎问虾猜那个系列吗' } },
+            { type: 'user/message', payload: { content: '康神开播了' } },
           ],
         },
       },
     };
     const out = c.text(fake);
     assert.ok(out.length > 0, '含梗的消息该算出注入文本');
-    assert.match(out, /瞎猜/, '该提到摸到的梗');
+    assert.match(out, /康神开播了/, '该提到命中的梗');
 
     // 不含梗的不注入
     const fake2 = {
@@ -126,7 +126,7 @@ test('取不到 session 时返回空，不崩', async () => {
   };
   const fs = await import('node:fs');
   const bak = fs.existsSync('./config.json') ? fs.readFileSync('./config.json', 'utf8') : null;
-  fs.writeFileSync('./config.json', JSON.stringify({ enabled: true, memes: true }));
+  fs.writeFileSync('./config.json', JSON.stringify({ enabled: true, memes: true, autoMeme: true }));
   try {
     apply(root, {});
     const c = ctxs[0];

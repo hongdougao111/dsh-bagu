@@ -1,0 +1,52 @@
+dsh-bagu
+Copyright (c) 2026 hongdougao111
+
+本项目的规则、代码与文档：MIT License（见 LICENSE）。
+
+────────────────────────────────────────
+词库数据
+────────────────────────────────────────
+
+data/memes.db 内含 6792 条中文网络梗词条。
+
+来源：梗Wiki  https://cnmeme.wiki
+     词条内容（title / tags / usage / origin / other / summary / aliases）
+     由梗Wiki 收录并由其社区整理，经该站公开 API 取得。
+     本仓库未对词条正文做改写。
+
+打包分发方式参考：thawline/dsh-memewiki
+     https://github.com/thawline/dsh-memewiki
+     该插件先做了「把词库内联进 DSH 插件」这件事。
+
+使用本项目时请一并保留对梗Wiki 的署名。
+梗词条内容的具体授权请以梗Wiki 站点声明为准；
+如需商用，请先确认该站条款。
+
+────────────────────────────────────────
+规则判据来源
+────────────────────────────────────────
+
+以下项目为「八股检测」规则的判据参考，仅为方法论来源，未直接复制代码：
+
+- beagle style-criteria
+  https://github.com/existential-birds/beagle
+  （代码注释把代码念一遍的判据）
+
+- voku/agent-skills · code-slop · comments-hygiene
+  https://github.com/voku/agent-skills
+  （comments must explain why, never what the code already expresses）
+
+- sloplint
+  https://github.com/DW-Studio/sloplint
+  （评分公式）
+
+- lieflat-less-ai-tone
+  https://github.com/larashero3-dotcom/lieflat-less-ai-tone
+  （两轮对照实验语料：1169 篇 / 520 万字）
+
+────────────────────────────────────────
+语料
+────────────────────────────────────────
+
+test/ 与 tools/ 中的真人语料样本（贴吧、B站评论、git commit 等）
+为公开发布内容摘录，仅用于回归测试判断误拦率，不随插件分发到运行时。

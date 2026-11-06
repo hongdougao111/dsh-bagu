@@ -8,27 +8,18 @@ AI 说话有两个毛病，这个插件各管一半：
 
 **一是写出谁都能说的话。**「优化了代码结构」「这个视频真的很不错」「首先态度要正，其次内容要实」——换个人说照样成立，等于没说。
 
-**二是认出梗却接不上。** 群里冒出一句「这不就是瞎问虾猜那期吗」，它要么当没看见，要么开始念词条：
+**二是认出梗却接不上。**群里冒出一句「康神开播了」，它要么当没看见，要么开始念词条：
 
 ```text
-✗「瞎问虾猜」是 B 站 UP 主瞎猜的系列视频，主要做动漫问答…
-✓ 反向空耳那期？我到现在还没猜出来「诗、水蛇、山神庙」
+✗「康神开播了」出自游戏主播陈兴玉观看另一位《无畏契约》区职业选手康康直播时的经典名场面…
+✓ 真的假的 我去真开播了
 ```
 
-第一件事靠规则，第二件事靠**在模型看到消息之前就把梗查好**。
+第一件事靠规则，第二件事靠**内置 6792 条梗词库 + 在模型开始想之前就查好**。
 
 ## 一 · 守门：发出去之前拦一道
 
-覆盖所有对外文本：
-
-| 场景 | 例子 |
-|---|---|
-| **聊天** | QQ 机器人、养鱼、DSH 会话 |
-| **评论** | B站、贴吧、微博、论坛 |
-| **工作沟通** | 邮件、客服回复、周报 |
-| **代码托管** | commit、PR 描述、review、issue、变更日志 |
-| **文档** | README、技术文档 |
-| **代码** | 注释 |
+覆盖所有对外文本：聊天、评论、邮件、commit、PR、review、issue、文档、代码注释。
 
 拦的是这些：
 
@@ -68,102 +59,91 @@ feat: 优化了用户模块的代码结构，提升了可维护性
 **第三层 · 场景**
 
 - **git**：commit / PR 模板骨架 / review 空话 / issue 客服腔
-- **代码注释**：把代码念一遍（判据来自 [beagle style-criteria](https://github.com/existential-birds/beagle/blob/main/plugins/beagle-core/skills/llm-artifacts-detection/references/style-criteria.md) 和 [voku/code-slop](https://github.com/voku/agent-skills/blob/main/skills/code-slop/rules/comments-hygiene.md)：comments must explain **why**, never **what** the code already expresses）
+- **代码注释**：把代码念一遍
+
+判据来自 [beagle style-criteria](https://github.com/existential-birds/beagle/blob/main/plugins/beagle-core/skills/llm-artifacts-detection/references/style-criteria.md)
+和 [voku/code-slop](https://github.com/voku/agent-skills/blob/main/skills/code-slop/rules/comments-hygiene.md)：
+comments must explain **why**, never **what** the code already expresses.
 
 ### 引用和使用的区别
-
-这是最难的判断。
 
 ```text
 「评论区一水儿「我记下了」」        → 在讨论这句话不是用它 → 放过
 「我记下了」                        → 直接用了 → 拦
 「不要只说「受益匪浅」」             → 在批评 → 放过
 「受益匪浅」                        → 真在拍马屁 → 拦
-「一定火＋求互关，雷踩得一个不落」    → 在点评别人的套话 → 放过
 ```
 
 四条判据：引号里的不算、前面有否定词、前面有指代词、后面跟评价词。
 
-## 二 · 接梗：模型看到消息之前就已经知道
+## 二 · 玩梗：内置 6792 条，模型开始想之前就查好
 
-**这一步和「能查梗」不一样。**查梗要模型主动调工具——它经常不调，直接按自己理解答了。
+**这一步和「能查梗」不一样。**查梗要模型主动调工具——它经常不调，直接按自己理解答了，或者联网搜一圈报个百科答案。
 
-这个插件不等它调。用户消息一进来，先查好，把结果塞进上下文：
-
-```text
-用户说：这不就是瞎问虾猜那个系列吗
-
-模型拿到的上下文：
-[梗]
-对方提的是 瞎猜；同族还有 反向空耳、握着我的抱枕、七岁舔地砖、第四种速度
-照这个接，别解释梗是什么意思。
-```
-
-模型还没开始想，就已经知道能接什么了。不含梗的消息一句都不注入，不浪费上下文。
-
-### 族是怎么来的
-
-梗不是孤岛，keywords 在梗之间重叠就形成族：
+这个插件不等它调。用户消息一进来，先查好，把**怎么接**塞进上下文：
 
 ```text
-「瞎问虾猜」→ 反向空耳 / 握着我的抱枕 / 七岁舔地砖 / 第四种速度
-「福本伸行」→ 超智游戏 / 斗牌传说 / 末世路
-「神龙斗士」→ 古代龙神号 / 超魔神龙神号 / 白虎龙神号 / 剑王龙神号
+用户说：康神开播了
+
+模型拿到的：
+[梗] 对方提到：康神开播了
+怎么接：…观众会刷"康神开播了"来指代这一经典片段。
+        要回复 真的假的 我去真开播了
+这一类：主播梗/游戏梗/瓦/文字梗
+照这个接，别念词条出处。
 ```
 
-对方提一个大概念，往下钻一层子形态才叫接住；原地重复叫敷衍。
+关键在那个「要回复 真的假的 我去真开播了」——**词库的 `usage` 字段里本来就有**。
+有了这句，模型不用自己想该接什么。
 
-### 真机踩的两个坑（0.10.1 修的）
+不含梗的消息一句都不注入。**闲聊一句都不浪费。**
 
-第一版发出去，装进 DSH 实测，模型的原话暴露了两个 bug：
+### 为什么能接住
 
-```text
-「工具列表里有 bagu_guard 和 .... 没有 bagu_meme 工具在函数列表里。
-  系统提示提到 bagu_meme，但实际函数定义中没有这个工具。」 ← bug 1
+匹配只认精确命中：标题、slug、别名真的出现在话里。不做反向模糊匹配。
 
-「注意系统提示 [梗] 对方提的是 67 —— 这是承接上一条"67"的。 ← bug 2
-  但用户现在换了话题问"灭建国是谁"。」
-```
+**因为 6792 条里任何两个汉字的组合都能撞上东西。**早先试过「按 2-3 字滑窗去 LIKE 查标题」，
+结果「帮我看看这个报错」撞出「让我看看你的战斗表情」——全是误报，直接废掉。
 
-**bug 1 · 工具没注册。**`bagu_meme` 原来被 `if (live.memes)` 包着，
-而 `live` 只在 `apply()` 时读一次 —— 设置页打开梗库后，提示里出现了这个工具名，
-函数列表里永远没有。改成**始终注册，开关在 execute 里判**。
+宁可漏接，不许乱报。
 
-**bug 2 · 注入的是上一轮消息。**预查从 `session.snapshotEvents()` 翻，
-但那时当轮 `user/message` 还没 append，翻到的是上一句。
-改成在 `agent/pre-step` 里抓当轮消息，预查优先用那份。
+### 玩梗尺度
 
-两个都是**静默失效**：外面看不出错，只是不生效。跟 0.5.1 那个 `ReferenceError` 被吞是一类。
-现在有 7 条测试专门锁这两处（`test/realtime.test.mjs`）。
+四档，0–100。默认交给模型自己判断，想手动接管才打开滑杆：
 
-### 四种接法
+| 档位 | 什么行为 |
+|---|---|
+| **很收着**（≤20） | 只接正面的、自嘲的。带贬义的外号不复读，不跟着起哄。 |
+| **有点度**（≤45） | 损发挥可以，损长相、损身体不行。别人先开的头，接半句。 |
+| **跟着玩**（≤70） | 社区玩什么就接什么，不自己发明。分寸跟着对方调子走。 |
+| **放得开**（>70） | 带刺的也能接。但对方认真了就立刻停。 |
 
-| 接法 | 什么时候 | 例子 |
-|---|---|---|
-| **下钻** | 对方点名大概念 | 神龙斗士 → 剑王龙神号 |
-| **换人** | 对方提了 A | 瞎问虾猜 → 反向空耳 |
-| **反打** | 对方半开玩笑 | 「一定火」→「这说法本身就挺八股」 |
-| **认领** | 梗说的是你 | 「社死」→「我现在就在社死」 |
-
-### AI 补充：默认用会话自己的模型，不用填 key
-
-`aiBridge` 开着时，把族提示喂给模型拼一句具体的接话。
-
-**默认走 DSH 会话自己的模型**——插件拿到当前 provider/model，用宿主已经配好的连接，
-不用填 API key、不用填接口地址，跟这个会话同一份额度。
-
-另配接口是兜底（`aiUseOwn`）：在 QQ 机器人里跑没有 DSH 会话，或者想换更便宜的模型时才需要。
-
-**五条失败路径都退回本地族提示，不抛**：没拿到路由、没有 llm 服务、stream 抛错、
-模型返空、返回超过 80 字。不会因为模型挂了导致消息发不出去。
+档位不写在提示里当标签，写行为——写标签模型只会背标签。
 
 ## 三 · 数据
 
-梗库来自 [梗Wiki](https://cnmeme.wiki) 的公开 API。`data/memes.json` 存 567 条，302KB。
+**内置 `data/memes.db`，6792 条，17MB SQLite。**零依赖，只用 Node 自带的 `node:sqlite`。
 
-**其中 120 条有完整锚点**（keywords / aliases），能成族、能接；其余能查到但接不出同族。
+表结构：
 
-### 八组测试
+```sql
+CREATE TABLE memes (
+  title TEXT PRIMARY KEY,  -- 词条名
+  slug  TEXT,              -- 别名
+  tags  TEXT,              -- 标签，逗号分隔
+  usage TEXT,              -- 怎么用 / 怎么接  ← 最值钱的就是这个
+  origin TEXT,             -- 出处
+  other TEXT,              -- 演化 / 相关 / 备注
+  summary TEXT,            -- 释义
+  aliases TEXT             -- 别名，逗号分隔
+);
+```
+
+**99% 的词条有 `usage`**（6709/6792），这就是它能「接」而不是只能「查」的原因。
+
+性能：首轮建索引 54ms，之后**每次查询 1.6ms**（内存索引，索引里带 usage，不碰数据库）。
+
+## 四 · 八组测试
 
 全部在 `tools/` 里可复现：
 
@@ -185,21 +165,7 @@ node tools/all-scenes.mjs   # 18 个场景
 node tools/evasion.mjs      # 对抗绕过
 ```
 
-### 贴吧那批语料为什么值钱
-
-孙吧、v吧的真人说话充满了「规则看来可疑」的形状：
-
-```text
-反问：    你确定看不到过去的时间？兄弟
-三段并列： 提瓦特世界是过去、现在、未来同时存在的
-复述后反打：是啊，所以就静悄悄的也忘了
-直接骂：   你放屁，分明是天理提供的
-单字回复： 诶嘿 / 草 / 就这？
-```
-
-全是真人在说真话。68 条零误拦，说明规则没把这些当套话。
-
-## 四 · 拦不住什么
+## 五 · 拦不住什么
 
 对抗测试 10 种绕过手法拦住 6 种。剩下 4 种是已知边界：
 
@@ -210,19 +176,18 @@ node tools/evasion.mjs      # 对抗绕过
 
 **规则只能认形状，认不了「这句话是不是真的」。** 止血带，不是解药。
 
-## 五 · 成本
+## 六 · 成本
 
 | 场景 | 配置 | 成本 |
 |---|---|---|
 | 纯浏览 / 日常聊天 | 默认 | **0** |
 | 守门 | 默认 | **0**（本地正则） |
-| 预查接梗 | 梗库开 | **0**（本地正则） |
-| 要它替你想一句 | + AI 接梗开 | 每条一次会话模型调用 |
+| 每轮自动查梗 | 默认开 | **0**（本地 SQLite，1.6ms） |
+| 要它替你想一句具体接话 | + AI 接梗开 | 每条一次会话模型调用 |
 
-系统提示注入 **31 字**（梗库开时 158 字），工具描述 **54 字**，输出 2 字或 40 字内。
-判断全在本地正则里跑完，**不调模型**——除了 AI 接梗那个单独开关。
+系统提示：守门 31 字；开了玩梗加约 120 字。判断全在本地跑，不调模型。
 
-## 六 · 装
+## 七 · 装
 
 ```sh
 dsh plugin --profile web add dsh-bagu
@@ -230,32 +195,37 @@ dsh plugin --profile web add dsh-bagu
 
 装完重启一次 dsh。**设置 → 八股检测**。
 
-## 七 · 设置页
+## 八 · 设置页
 
-- **挡不挡**——总开关 / 严格模式 / 提示那一节 / 梗库
+- **挡不挡**——总开关 / 严格模式 / 提示那一节
+- **玩梗**——梗库开关 / 每轮自动查 / 尺度开关 + 滑杆
 - **AI 接梗**——开关 + 显示当前会话模型 + 另配接口（兜底）
 - **试一段**——八种样本，当场看能不能过
 - **阈值**——留白词下限、结构腔倍数、具体物下限
 
-## 八 · 开发
+## 九 · 开发
 
 ```sh
-npm test    # 102 个单元测试
+npm test    # 110 个单元测试
 ```
-
-## 数据来源
-
-- 两轮对照实验，1169 篇 / 520 万字（[lieflat-less-ai-tone](https://github.com/larashero3-dotcom/lieflat-less-ai-tone)）
-- 10 万条真人评论 vs 2180 条 AI 评论的密度实测
-- [sloplint](https://github.com/DW-Studio/sloplint) 的评分公式
-- [beagle style-criteria](https://github.com/existential-birds/beagle/blob/main/plugins/beagle-core/skills/llm-artifacts-detection/references/style-criteria.md)
-- [梗Wiki](https://cnmeme.wiki) 的公开 API
 
 ## 致谢
 
-预查注入的做法参考了 [thawline/dsh-memewiki](https://github.com/thawline/dsh-memewiki)——
-「不等模型来查，先把答案摆在它面前」这个思路是它先做的。
+**词库来自 [梗Wiki](https://cnmeme.wiki)。**
+
+6792 条词条是那个站点一条一条攒出来的——来源、用法、标签、别名、摘要，全部来自它的公开 API。
+最值钱的 `usage` 字段（「怎么接」）也是它整理的，不是这里编的。
+
+没有那个站，这个插件只会有几十条手抄的梗，接不住任何东西。
+
+也感谢 [thawline/dsh-memewiki](https://github.com/thawline/dsh-memewiki)——
+「不等模型来查，先把答案摆在它面前」这个做法是它先做的，词库打包分发的方式也是跟它学的。
+
+规则部分的判据参考自 [beagle style-criteria](https://github.com/existential-birds/beagle/blob/main/plugins/beagle-core/skills/llm-artifacts-detection/references/style-criteria.md)、
+[voku/code-slop](https://github.com/voku/agent-skills/blob/main/skills/code-slop/rules/comments-hygiene.md)、
+[sloplint](https://github.com/DW-Studio/sloplint)、
+[lieflat-less-ai-tone](https://github.com/larashero3-dotcom/lieflat-less-ai-tone)。
 
 ## 许可
 
-MIT。
+MIT。词库数据来自梗Wiki，使用时请一并保留对其的署名。
