@@ -239,24 +239,40 @@ window.__ModuleLoader__.load({
               onChange: () => save({ memes: view.memes !== true }),
             })))),
 
-        // ── AI 接梗（要花钱，单独一块）──────────────
+        // ── AI 接梗（默认走会话模型，不用填 key）──────────
         h('div', null,
           h('div', { 'data-bg-h': '' }, 'AI 接梗'),
           h('div', { 'data-bg-card': '' },
             h(Row, {
               label: view.aiBridge ? 'AI 接梗：开' : 'AI 接梗：关',
-              note: '开 = 每条要接梗的消息都调一次模型，拼一句具体的接话。' +
-                    '要 API key、要付 token —— 养鱼那种要质量的场景值得，日常聊天不值得。',
+              note: '开 = 每条要接梗的消息都调一次模型，拼一句具体的接话。默认走 DSH 会话自己的模型，不用填 key；失败才退回本地族提示。',
             }, h(Switch, {
               on: view.aiBridge === true, label: 'AI 接梗',
               disabled: busy === 'save' || !on || view.memes !== true,
               onChange: () => save({ aiBridge: view.aiBridge !== true }),
             })),
 
-            view.aiBridge ? h('div', { 'data-bg-row': '' },
+            h(Row, {
+              label: '用哪个模型',
+              note: st.route
+                ? `当前会话：${st.route.provider} / ${st.route.model}。不用填 key。`
+                : '当前会话：还没拿到。DSH 会话里发一句话之后就能拿到。',
+            }, h('div', { 'data-bg-note': '', style: { flex: 'none' } },
+              st.route ? st.route.model : '—')),
+
+            h(Row, {
+              label: view.aiUseOwn ? '另配接口：开' : '另配接口：关',
+              note: '会话模型用不了时才需要（没有会话、或者想换更便宜的模型）。',
+            }, h(Switch, {
+              on: view.aiUseOwn === true, label: '另配接口',
+              disabled: busy === 'save' || !on || view.aiBridge !== true,
+              onChange: () => save({ aiUseOwn: view.aiUseOwn !== true }),
+            })),
+
+            view.aiUseOwn ? h('div', { 'data-bg-row': '' },
               h('div', { 'data-bg-grow': '' },
                 h('div', { 'data-bg-label': '' }, '接口地址'),
-                h('div', { 'data-bg-note': '' }, 'OpenAI 兼容的 /v1 端点。留空就沿用宿主已配的。')),
+                h('div', { 'data-bg-note': '' }, 'OpenAI 兼容的 /v1 端点。')),
               h('input', {
                 'data-bg-num': '', 'data-wide': '', type: 'text',
                 value: view.aiBaseUrl || '', placeholder: 'https://api.openai.com/v1',
@@ -265,7 +281,7 @@ window.__ModuleLoader__.load({
                 onBlur: () => { if (view.aiBaseUrl !== st.config.aiBaseUrl) save({ aiBaseUrl: view.aiBaseUrl }) },
               })) : null,
 
-            view.aiBridge ? h('div', { 'data-bg-row': '' },
+            view.aiUseOwn ? h('div', { 'data-bg-row': '' },
               h('div', { 'data-bg-grow': '' },
                 h('div', { 'data-bg-label': '' }, '模型名'),
                 h('div', { 'data-bg-note': '' }, '比如 gpt-4o-mini、deepseek-chat。')),
@@ -277,11 +293,10 @@ window.__ModuleLoader__.load({
                 onBlur: () => { if (view.aiModel !== st.config.aiModel) save({ aiModel: view.aiModel }) },
               })) : null,
 
-            view.aiBridge ? h('div', { 'data-bg-row': '' },
+            view.aiUseOwn ? h('div', { 'data-bg-row': '' },
               h('div', { 'data-bg-grow': '' },
                 h('div', { 'data-bg-label': '' }, 'API Key'),
-                h('div', { 'data-bg-note': '' },
-                  '存在插件目录的 config.json 里，明文。不想存这儿就留空、改用宿主那把。')),
+                h('div', { 'data-bg-note': '' }, '明文存在插件目录的 config.json。')),
               h('input', {
                 'data-bg-num': '', 'data-wide': '', type: 'password',
                 value: view.aiApiKey || '', placeholder: 'sk-...',
@@ -289,65 +304,6 @@ window.__ModuleLoader__.load({
                 onChange: (e) => setView({ ...view, aiApiKey: e.target.value }),
                 onBlur: () => { if (view.aiApiKey !== st.config.aiApiKey) save({ aiApiKey: view.aiApiKey }) },
               })) : null)),
-
-        // ── 试一段 ───────────────────────────
-        h('div', null,
-          h('div', { 'data-bg-h': '' }, '试一段'),
-          h('div', { 'data-bg-card': '' },
-            h('div', { 'data-bg-chips': '' },
-              SAMPLES.map((s, i) => h('button', {
-                key: i, 'data-bg-chip': '',
-                onClick: () => { setText(s.text); setVerdict(null) },
-              }, s.label))),
-            h('textarea', {
-              'data-bg-in': '', value: text, rows: 3,
-              placeholder: '粘一段准备发出去的文字。聊天、commit、邮件都行。',
-              onChange: (e) => { setText(e.target.value); setVerdict(null) },
-            }),
-            h('div', { 'data-bg-row': '' },
-              h('button', {
-                'data-bg-btn': '', 'data-primary': '',
-                disabled: busy === 'check', onClick: check,
-              }, busy === 'check' ? '过着…' : '过一遍'),
-              h('div', { 'data-bg-grow': '' },
-                h('div', { 'data-bg-note': '' }, verdict
-                  ? (verdict.pass ? '能发' : '打回')
-                  : '看这段能不能发出去'))),
-            verdict ? h('div', {
-              'data-bg-verdict': '',
-              'data-pass': verdict.pass ? '' : undefined,
-              'data-block': verdict.pass ? undefined : '',
-            },
-              h('div', { 'data-bg-dot': '' }),
-              h('div', { 'data-bg-verdict-text': '' }, verdict.line),
-            ) : null)),
-
-        // ── 阈值 ─────────────────────────────
-        h('div', null,
-          h('div', { 'data-bg-h': '' }, '阈值'),
-          h('div', { 'data-bg-card': '' },
-            h(Row, {
-              label: '留白词下限',
-              note: '每千字几个「好像 / 应该 / 大概」。低于这个就报句句在下断言。',
-            }, num('hedgeFloor')),
-            h(Row, {
-              label: '结构腔倍数',
-              note: '超过同文体基线的几倍才报。调大更宽容。',
-            }, num('structureTimes')),
-            h(Row, {
-              label: '具体物下限',
-              note: '每百字至少几个数字、时间、经历、原话、名字。',
-            }, num('concreteFloor')),
-            h('div', { 'data-bg-row': '' },
-              h('div', { 'data-bg-grow': '' }, h('div', { 'data-bg-note': '' }, '恢复默认。')),
-              h('button', {
-                'data-bg-btn': '', disabled: busy === 'save',
-                onClick: () => save({
-                  hedgeFloor: st.defaults.hedgeFloor,
-                  structureTimes: st.defaults.structureTimes,
-                  concreteFloor: st.defaults.concreteFloor,
-                }),
-              }, '恢复默认')))),
 
         msg ? h('div', {
           'data-bg-msg': '', 'data-err': msg.err ? '' : undefined, 'data-ok': msg.ok ? '' : undefined,

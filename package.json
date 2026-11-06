@@ -1,7 +1,7 @@
 {
   "name": "dsh-bagu",
-  "version": "0.8.0",
-  "description": "给 AI 对外说话的一道门：聊天、评论、邮件、commit、PR、文档、注释都管，像八股就打回。可选接梗与 AI 补充。",
+  "version": "0.9.0",
+  "description": "给 AI 对外说话的一道门：像八股就打回。接梗走会话自己的模型，不用填 key。",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
