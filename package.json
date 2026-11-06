@@ -1,7 +1,7 @@
 {
   "name": "dsh-bagu",
-  "version": "0.9.0",
-  "description": "给 AI 对外说话的一道门：像八股就打回。接梗走会话自己的模型，不用填 key。",
+  "version": "0.10.0",
+  "description": "两道门：发出去的话像八股就打回，对方抛梗就接住。接梗在模型看到消息前就查好。",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

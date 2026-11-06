@@ -3,9 +3,9 @@
   "manifestVersion": "0.15",
   "id": "dsh-bagu",
   "name": "dsh-bagu",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "license": "MIT",
-  "description": "AI 对外说话前的一道门：像八股就打回，接梗走会话模型。",
+  "description": "AI 对外说话两道门：八股打回，梗接住。",
   "facets": {
     "host": {
       "entry": "lib/index.js",
@@ -29,7 +29,7 @@
     "x-display": [
       {
         "title": "dsh-bagu",
-        "description": "所有对外文本发出前过一遍，像八股就打回。接梗默认走会话模型，不用填 key。"
+        "description": "发出去的话像八股就打回；对方抛梗，模型看到消息前就已经把族查好了。"
       }
     ]
   }
