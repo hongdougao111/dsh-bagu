@@ -66,6 +66,7 @@ window.__ModuleLoader__.load({
 [data-bg-sw][data-on]::after{transform:translateX(17px);}
 [data-bg-sw][disabled]{opacity:.45;cursor:default;}
 
+[data-bg-num][data-wide]{width:200px;text-align:left;font-variant-numeric:normal;}
 [data-bg-num]{width:88px;padding:6px 9px;border-radius:8px;font:inherit;font-size:13px;
   font-variant-numeric:tabular-nums;text-align:right;color:inherit;
   border:1px solid var(--dsw-alias-border-l,rgba(128,128,128,.28));
@@ -231,12 +232,63 @@ window.__ModuleLoader__.load({
 
             h(Row, {
               label: view.memes ? '梗库：开' : '梗库：关',
-              note: '开 = 多一个查梗工具，判断时会顺带提一句这段里用了哪些梗。' +
+              note: '开 = 多一个接梗工具，看对方说了什么梗，给出同族能接的。' +
                     '它判的是「这个梗过气了没」，跟八股无关，所以默认关。',
             }, h(Switch, {
               on: view.memes === true, label: '梗库', disabled: busy === 'save' || !on,
               onChange: () => save({ memes: view.memes !== true }),
             })))),
+
+        // ── AI 接梗（要花钱，单独一块）──────────────
+        h('div', null,
+          h('div', { 'data-bg-h': '' }, 'AI 接梗'),
+          h('div', { 'data-bg-card': '' },
+            h(Row, {
+              label: view.aiBridge ? 'AI 接梗：开' : 'AI 接梗：关',
+              note: '开 = 每条要接梗的消息都调一次模型，拼一句具体的接话。' +
+                    '要 API key、要付 token —— 养鱼那种要质量的场景值得，日常聊天不值得。',
+            }, h(Switch, {
+              on: view.aiBridge === true, label: 'AI 接梗',
+              disabled: busy === 'save' || !on || view.memes !== true,
+              onChange: () => save({ aiBridge: view.aiBridge !== true }),
+            })),
+
+            view.aiBridge ? h('div', { 'data-bg-row': '' },
+              h('div', { 'data-bg-grow': '' },
+                h('div', { 'data-bg-label': '' }, '接口地址'),
+                h('div', { 'data-bg-note': '' }, 'OpenAI 兼容的 /v1 端点。留空就沿用宿主已配的。')),
+              h('input', {
+                'data-bg-num': '', 'data-wide': '', type: 'text',
+                value: view.aiBaseUrl || '', placeholder: 'https://api.openai.com/v1',
+                disabled: busy === 'save',
+                onChange: (e) => setView({ ...view, aiBaseUrl: e.target.value }),
+                onBlur: () => { if (view.aiBaseUrl !== st.config.aiBaseUrl) save({ aiBaseUrl: view.aiBaseUrl }) },
+              })) : null,
+
+            view.aiBridge ? h('div', { 'data-bg-row': '' },
+              h('div', { 'data-bg-grow': '' },
+                h('div', { 'data-bg-label': '' }, '模型名'),
+                h('div', { 'data-bg-note': '' }, '比如 gpt-4o-mini、deepseek-chat。')),
+              h('input', {
+                'data-bg-num': '', 'data-wide': '', type: 'text',
+                value: view.aiModel || '', placeholder: 'gpt-4o-mini',
+                disabled: busy === 'save',
+                onChange: (e) => setView({ ...view, aiModel: e.target.value }),
+                onBlur: () => { if (view.aiModel !== st.config.aiModel) save({ aiModel: view.aiModel }) },
+              })) : null,
+
+            view.aiBridge ? h('div', { 'data-bg-row': '' },
+              h('div', { 'data-bg-grow': '' },
+                h('div', { 'data-bg-label': '' }, 'API Key'),
+                h('div', { 'data-bg-note': '' },
+                  '存在插件目录的 config.json 里，明文。不想存这儿就留空、改用宿主那把。')),
+              h('input', {
+                'data-bg-num': '', 'data-wide': '', type: 'password',
+                value: view.aiApiKey || '', placeholder: 'sk-...',
+                disabled: busy === 'save',
+                onChange: (e) => setView({ ...view, aiApiKey: e.target.value }),
+                onBlur: () => { if (view.aiApiKey !== st.config.aiApiKey) save({ aiApiKey: view.aiApiKey }) },
+              })) : null)),
 
         // ── 试一段 ───────────────────────────
         h('div', null,
