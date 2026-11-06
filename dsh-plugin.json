@@ -3,7 +3,7 @@
   "manifestVersion": "0.15",
   "id": "dsh-bagu",
   "name": "dsh-bagu",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "license": "MIT",
   "description": "AI 对外说话两道门：八股打回，梗接住。",
   "facets": {
@@ -29,7 +29,7 @@
     "x-display": [
       {
         "title": "dsh-bagu",
-        "description": "发出去的话像八股就打回；对方抛梗，模型看到消息前就已经把族查好了。"
+        "description": "发出去的话像八股就打回；对方抛梗，模型开始想之前就已经把族查好塞进上下文。"
       }
     ]
   }

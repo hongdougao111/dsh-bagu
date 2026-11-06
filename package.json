@@ -1,7 +1,7 @@
 {
   "name": "dsh-bagu",
-  "version": "0.10.0",
-  "description": "两道门：发出去的话像八股就打回，对方抛梗就接住。接梗在模型看到消息前就查好。",
+  "version": "0.10.1",
+  "description": "两道门：八股打回，梗接住。接梗在模型开始想之前就把族查好。",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
