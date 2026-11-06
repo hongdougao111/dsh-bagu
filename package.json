@@ -1,6 +1,6 @@
 {
   "name": "dsh-bagu",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "AI 对外说话前的一道门。聊天、评论、邮件、commit、PR、文档、注释都管：过了就发，没过就打回。",
   "type": "module",
   "main": "lib/index.js",
@@ -12,6 +12,7 @@
   "files": [
     "lib",
     "test",
+    "data",
     "client.js",
     "dsh-plugin.json",
     "cordis.patch.yml",

@@ -227,6 +227,15 @@ window.__ModuleLoader__.load({
             }, h(Switch, {
               on: view.prompt !== false, label: '提示节', disabled: busy === 'save' || !on,
               onChange: () => save({ prompt: view.prompt === false }),
+            })),
+
+            h(Row, {
+              label: view.memes ? '梗库：开' : '梗库：关',
+              note: '开 = 多一个查梗工具，判断时会顺带提一句这段里用了哪些梗。' +
+                    '它判的是「这个梗过气了没」，跟八股无关，所以默认关。',
+            }, h(Switch, {
+              on: view.memes === true, label: '梗库', disabled: busy === 'save' || !on,
+              onChange: () => save({ memes: view.memes !== true }),
             })))),
 
         // ── 试一段 ───────────────────────────
