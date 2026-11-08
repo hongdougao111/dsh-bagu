@@ -1,6 +1,6 @@
 {
   "name": "dsh-bagu",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "两道门：八股打回（聊天/评论/邮件/commit/PR/文档/注释全管）；梗接住（内置梗Wiki 6845 条，每天可自动更新）。",
   "type": "module",
   "main": "lib/index.js",
