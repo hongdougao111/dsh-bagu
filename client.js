@@ -325,6 +325,31 @@ window.__ModuleLoader__.load({
             })),
 
             h(Row, {
+              label: view.autoUpdate !== false ? '每天更新词库：开' : '每天更新词库：关',
+              note: st.lastCheck
+                ? `上次查过：${st.lastCheck}。现在 ${st.memeTotal} 条。`
+                : `光大不更新会变旧。现在 ${st.memeTotal} 条，开了就每天去看一眼新词条。`,
+            }, h(Switch, {
+              on: view.autoUpdate !== false, label: '每天更新',
+              disabled: busy === 'save' || !on || view.memes === false,
+              onChange: () => save({ autoUpdate: view.autoUpdate === false }),
+            })),
+
+            view.autoUpdate !== false ? h('div', { 'data-bg-row': '' },
+              h('div', { 'data-bg-grow': '' },
+                h('div', { 'data-bg-label': '' }, '每天几点'),
+                h('div', { 'data-bg-note': '' },
+                  '凌晨机器闲着，四点最稳。更新只补新词条，不动你改过的。')),
+              h('select', {
+                'data-bg-num': '', 'data-wide': '', value: String(view.updateHour ?? 4),
+                disabled: busy === 'save',
+                onChange: (e) => save({ updateHour: Number(e.target.value) }),
+              },
+                Array.from({ length: 24 }, (_, i) =>
+                  h('option', { key: i, value: String(i) },
+                    String(i).padStart(2, '0') + ':00')))) : null,
+
+            h(Row, {
               label: view.toneSwitch ? '尺度：自己定' : '尺度：交给模型',
               note: view.toneSwitch
                 ? '下面这个滑杆管着它能玩多野。'

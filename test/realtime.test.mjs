@@ -25,8 +25,11 @@ test('bagu_meme 的 execute 里有开关检查', () => {
   assert.match(tail, /if \(!live\.memes\)/, 'execute 里得判 live.memes，否则关了还能用');
 });
 
-test('预查优先用当轮消息，不靠 session 翻', () => {
-  assert.match(SRC, /currentUserText \|\| lastUserText/, '预查得优先用 pre-step 抓到的当轮消息');
+test('预查只认当轮消息，不翻 session', () => {
+  // 曾经 fallback 到 lastUserText，鼓一轮里第二次调用时翻到历史消息，
+  // 注入一堆跟本轮无关的梗（实测：问「有人味吗」塞进「检测到前方有XX」）。
+  assert.doesNotMatch(SRC, /currentUserText \|\| lastUserText/, '不许再 fallback 到 session');
+  assert.match(SRC, /const text = currentUserText;/, '只认当轮消息');
 });
 
 test('注册了 agent/pre-step 钩子', () => {

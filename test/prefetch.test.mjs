@@ -57,6 +57,7 @@ test('注册了 bagu:prefetch', async () => {
 test('有梗的消息能算出注入文本', async () => {
   const { apply } = await import('../lib/index.js');
   const ctxs = [];
+  let stepHandler = null;
   const root = {
     inject(deps, fn) {
       if (deps.includes('llm')) return;
@@ -68,6 +69,49 @@ test('有梗的消息能算出注入文本', async () => {
         tools: { register() {} },
         webServer: { register() { return () => {} } },
         effect(fn) { return fn() },
+        on(evt, fn) { if (evt === 'agent/pre-step') stepHandler = fn },
+      });
+    },
+  };
+  const fs = await import('node:fs');
+  const bak = fs.existsSync('./config.json') ? fs.readFileSync('./config.json', 'utf8') : null;
+  fs.writeFileSync('./config.json', JSON.stringify({ enabled: true, memes: true, autoMeme: true }));
+  try {
+    apply(root, {});
+    assert.ok(stepHandler, '必须注册 agent/pre-step —— 当轮消息只能从这里来');
+    const c = ctxs[0];
+
+    // 走 pre-step 提供当轮消息
+    await stepHandler({ messages: [{ role: 'user', content: '康神开播了' }] }, async () => ({}));
+    const out = c.text({ agent: { session: { snapshotEvents: () => [] } } });
+    assert.ok(out.length > 0, '含梗的消息该算出注入文本');
+    assert.match(out, /康神开播了/, '该提到命中的梗');
+
+    // 不含梗的不注入（同样走 pre-step）
+    await stepHandler({ messages: [{ role: 'user', content: '帮我看看这个报错' }] }, async () => ({}));
+    assert.equal(c.text({ agent: { session: { snapshotEvents: () => [] } } }), '', '不含梗不该注入');
+  } finally {
+    if (bak !== null) fs.writeFileSync('./config.json', bak);
+    else if (fs.existsSync('./config.json')) fs.unlinkSync('./config.json');
+  }
+});
+
+test('清空之后不再翻 session 拿历史消息', async () => {
+  const { apply } = await import('../lib/index.js');
+  const ctxs = [];
+  let stepHandler = null;
+  const root = {
+    inject(deps, fn) {
+      if (deps.includes('llm')) return;
+      fn({
+        systemPrompt: {
+          section() { return () => {} },
+          context(o) { ctxs.push(o); return () => {} },
+        },
+        tools: { register() {} },
+        webServer: { register() { return () => {} } },
+        effect(fn) { return fn() },
+        on(evt, fn) { if (evt === 'agent/pre-step') stepHandler = fn },
       });
     },
   };
@@ -77,30 +121,21 @@ test('有梗的消息能算出注入文本', async () => {
   try {
     apply(root, {});
     const c = ctxs[0];
-    const fake = {
-      agent: {
-        session: {
-          snapshotEvents: () => [
-            { type: 'user/message', payload: { content: '康神开播了' } },
-          ],
-        },
-      },
-    };
-    const out = c.text(fake);
-    assert.ok(out.length > 0, '含梗的消息该算出注入文本');
-    assert.match(out, /康神开播了/, '该提到命中的梗');
 
-    // 不含梗的不注入
-    const fake2 = {
-      agent: {
-        session: {
-          snapshotEvents: () => [
-            { type: 'user/message', payload: { content: '帮我看看这个报错' } },
-          ],
-        },
-      },
+    // 当轮说了含梗的话
+    await stepHandler({ messages: [{ role: 'user', content: '康神开播了' }] }, async () => ({}));
+    const first = c.text({ agent: { session: { snapshotEvents: () => [] } } });
+    assert.ok(first.length > 0, '第一次该注入');
+
+    // 同一轮里再调一次：当轮消息已经用掉了，不许翻 session 拿历史
+    const session = {
+      snapshotEvents: () => [
+        { type: 'user/message', payload: { content: '检测到前方有XX' } },
+        { type: 'user/message', payload: { content: '我错了但我不能改' } },
+      ],
     };
-    assert.equal(c.text(fake2), '', '不含梗不该注入');
+    const second = c.text({ agent: { session } });
+    assert.equal(second, '', '清空之后不许翻 session 注入历史梗，实际注入了: ' + second.slice(0, 60));
   } finally {
     if (bak !== null) fs.writeFileSync('./config.json', bak);
     else if (fs.existsSync('./config.json')) fs.unlinkSync('./config.json');
