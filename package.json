@@ -1,6 +1,6 @@
 {
   "name": "dsh-bagu",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "两道门：八股打回（含空指代/拆句弹回/承诺收尾那套 DeepSeek 腔）；梗接住（内置梗Wiki 6845 条，每天自动更新）。",
   "type": "module",
   "main": "lib/index.js",

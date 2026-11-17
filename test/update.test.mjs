@@ -19,14 +19,16 @@ test('备份要轮转，不能只增不减', () => {
   assert.match(UPDATE, /pruneBackups\(log\)/, '写完备份要调一下');
 });
 
-test('更新按小时对齐，不跟启动时刻漂', () => {
-  // 用 setInterval(24h) 会跟着启动时刻走，早上开机就永远早上更新。
-  assert.match(INDEX, /getHours\(\)/, '得看当前小时');
-  assert.match(INDEX, /live\.updateHour/, '得读配置里的小时');
+test('按「距上次超过 20 小时」判，不跟整点绑', () => {
+  // 死在整点上那套在 DSH 上不成立：DSH 不是常驻服务，四点不一定会开着。
+  assert.match(INDEX, /20 \* 60 \* 60 \* 1000/, '得有 20 小时的时间闸');
+  assert.doesNotMatch(INDEX, /live\.updateHour/, '不该再读小时配置');
 });
 
-test('同一天不重复跑', () => {
-  assert.match(INDEX, /toDateString\(\)/, '得比日期，跑过就跳过');
+test('刚跑过就不重复跑', () => {
+  // 判据从「同一天」改成「20 小时内」。原来按日期判，跨零点会重跑一次。
+  assert.match(INDEX, /stale/, '得算过不过期');
+  assert.doesNotMatch(INDEX, /toDateString\(\)/, '不该再按日期判');
 });
 
 test('列表接口拿不到总数，翻页要容错', () => {
