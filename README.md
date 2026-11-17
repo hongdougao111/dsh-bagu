@@ -226,6 +226,15 @@ npm test    # 110 个单元测试
 [sloplint](https://github.com/DW-Studio/sloplint)、
 [lieflat-less-ai-tone](https://github.com/larashero3-dotcom/lieflat-less-ai-tone)。
 
+## 一起修过的人
+
+- [@AlaIchhe](https://github.com/AlaIchhe) —— PR #2。
+  AI 接梗一开就崩的那个 `TypeError`，是他先报的、先定位的、先修好的。
+  `bridge()` 换了来源但字段名没跟着换，这种半截重构我漏了一整轮。
+  他还顺手发现 `bagu_meme` 那条 `ReferenceError: list is not defined`。
+
+完整名单见 [CONTRIBUTORS.md](CONTRIBUTORS.md)。
+
 ## 许可
 
 MIT。词库数据来自梗Wiki，使用时请一并保留对其的署名。
