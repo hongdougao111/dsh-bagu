@@ -31,12 +31,18 @@ test('刚跑过就不重复跑', () => {
   assert.doesNotMatch(INDEX, /toDateString\(\)/, '不该再按日期判');
 });
 
-test('列表接口拿不到总数，翻页要容错', () => {
-  // 接口只返回 items / limit / offset / has_more，没有 total。
-  // 中途一页失败不该整轮作废。
-  assert.match(UPDATE, /has_more/);
-  assert.match(UPDATE, /fails >= 3/, '连续失败才停');
-  assert.match(UPDATE, /slugs\.size === 0/, '一条都没拿到才算失败');
+test('翻页断了就整轮不补，别拿半截算缺口', () => {
+  // 实测踩过：只翻到 240 条就断，提示「缺 72 条」，其实那是前 240 条范围内的缺口，
+  // 全站缺口可能多得多。半截结果不能当缺口用。
+  assert.match(UPDATE, /complete = false/, '得有完成标记');
+  assert.match(UPDATE, /if \(!complete\)/, '断了要单独处理');
+  assert.doesNotMatch(UPDATE, /这轮按已拿到的补/, '不许拿半截结果去补');
+});
+
+test('某一页失败先重试同一页，不跳过', () => {
+  // 跳过一页等于在缺口上挖洞：那一页的词条永远不会被算成「缺」。
+  assert.match(UPDATE, /fails < 3/, '重试要有次数');
+  assert.match(UPDATE, /continue;\s*\/\/ offset/, '重试时不能让 offset 动');
 });
 
 test('MAX_PAGES 够覆盖全站', () => {

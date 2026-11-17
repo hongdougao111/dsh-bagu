@@ -1,6 +1,6 @@
 {
   "name": "dsh-bagu",
-  "version": "0.13.2",
+  "version": "0.13.3",
   "description": "两道门：八股打回（含空指代/拆句弹回/承诺收尾那套 DeepSeek 腔）；梗接住（内置梗Wiki 6845 条，每天自动更新）。",
   "type": "module",
   "main": "lib/index.js",
@@ -22,7 +22,7 @@
     "CONTRIBUTORS.md"
   ],
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test --test-concurrency=1 test/*.test.mjs"
   },
   "engines": {
     "node": ">=18"
