@@ -3,7 +3,7 @@
   "manifestVersion": "0.15",
   "id": "dsh-bagu",
   "name": "dsh-bagu",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "license": "MIT",
   "description": "AI 对外说话两道门：八股打回，梗接住。",
   "facets": {
